@@ -1,0 +1,150 @@
+.detailCont {
+    display: flex;
+    background-color: #1b1b1b;
+    width: 100%;
+    height: 100vh;
+}
+.innerCont{
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    padding: 15px;
+}
+.movieDetailCont{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+.detailCont h1 {
+    font-size: 70px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.moviePoster{
+    border-radius: 15px;
+    object-fit: contain;
+    width:30%;
+    height: 70%;
+}
+.genresCont{
+    display: flex;
+    gap:10px;
+    margin-top: -10px;
+   
+}
+.genres{
+    padding: 6px;
+    padding-left:15px ;
+    padding-right:15px ;
+
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgb(71, 71, 71);
+    color: rgb(143, 143, 143);
+    font-size: 20px;
+    
+}
+.otherMovieDetail{
+    display: flex;
+    align-items: center;
+    gap:10px;
+    
+}
+.ratingCont{
+    display: flex;
+    align-items: center;
+    gap:10px;
+    
+    color:rgb(71, 71, 71);
+    font-size: 20px;
+    font-weight: 700; 
+}
+.rateImgCont{
+    width: 50px;
+    height: 50px;
+}
+.imdbPng{
+    width:100%;
+    height: 100%;
+}
+.runtimeCont{
+    display: flex;
+    align-items: center;
+    color:rgb(71, 71, 71);
+    font-size: 20px;
+    font-weight: 700;
+    
+}
+.runtimeImgCont{
+    width: 50px;
+    height: 50px;
+}
+.runtimePng{
+    width:100%;
+    height: 100%;
+}
+.languageCont{
+    display: flex;
+    align-items: center;
+    color:rgb(71, 71, 71);
+    font-size: 20px;
+    font-weight: 700;
+    gap:10px;
+    
+}
+.languageImgCont{
+    width: 40px;
+    height: 40px;
+}
+.languagePng{
+    width:100%;
+    height: 100%;
+}
+.movieDesc{
+    width:60%;
+    color: grey;
+    font-size: 20px;
+}
+.trailerButtonCont {
+    margin-top: 20px;
+}
+
+.trailerButton {
+    background-color: #ffcc00;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.trailerButton:hover {
+    background-color: #ffaa00;
+}
+
+
+@media (max-width: 768px) {
+    .detailCont {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .detailCont h1 {
+        font-size: 28px;
+    }
+
+    .detailCont img {
+        width: 250px;
+    }
+
+    .detailCont p {
+        font-size: 16px;
+    }
+}

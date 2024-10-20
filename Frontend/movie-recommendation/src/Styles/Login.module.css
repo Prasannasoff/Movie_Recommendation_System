@@ -1,0 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap");
+
+
+.loginCont::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+    background: url("../bgImage.jpg") center/cover no-repeat; /* Simplified background property */
+    z-index: 0; /* Ensure the background is behind other elements */
+}
+
+nav {
+    position: fixed;
+    padding: 25px 60px;
+    z-index: 1;
+}
+
+nav a img {
+    width: 167px;
+}
+
+.formWrapper { /* Changed from .form-wrapper to .formWrapper */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 4px;
+    padding: 70px;
+    width: 450px;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 1; /* Ensure the form is above the background */
+}
+
+.formWrapper h2 { /* Changed from .form-wrapper to .formWrapper */
+    color: #fff;
+    font-size: 2rem;
+}
+
+.formWrapper form { /* Changed from .form-wrapper to .formWrapper */
+    margin: 25px 0 65px;
+}
+
+.formControl { /* Changed from .form-control to .formControl */
+    height: 50px;
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.formControl input { /* Changed from .form-control to .formControl */
+    height: 100%;
+    width: 100%;
+    background: #333;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0 20px;
+}
+
+.formControl input:is(:focus, :valid) { /* Changed from .form-control to .formControl */
+    background: #444;
+    padding: 16px 20px 0;
+}
+
+.formControl label { /* Changed from .form-control to .formControl */
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    pointer-events: none;
+    color: #8c8c8c;
+    transition: all 0.1s ease;
+}
+
+.formControl input:is(:focus, :valid)~label { /* Changed from .form-control to .formControl */
+    font-size: 0.75rem;
+    transform: translateY(-130%);
+}
+
+form button {
+    width: 100%;
+    padding: 16px 0;
+    font-size: 1rem;
+    background: #e50914;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    margin: 25px 0 10px;
+    cursor: pointer;
+    transition: 0.1s ease;
+}
+
+form button:hover {
+    background: #c40812;
+}
+
+.formWrapper a { /* Changed from .form-wrapper to .formWrapper */
+    text-decoration: none;
+}
+
+.formWrapper a:hover { /* Changed from .form-wrapper to .formWrapper */
+    text-decoration: underline;
+}
+
+.formWrapper :where(label, p, small, a) { /* Changed from .form-wrapper to .formWrapper */
+    color: #b3b3b3;
+}
+
+form .formHelp { /* Changed from .form-help to .formHelp */
+    display: flex;
+    justify-content: space-between;
+}
+
+form .rememberMe { /* Changed from .remember-me to .rememberMe */
+    display: flex;
+}
+
+form .rememberMe input { /* Changed from .remember-me to .rememberMe */
+    margin-right: 5px;
+    accent-color: #b3b3b3;
+}
+
+form .formHelp :where(label, a) { /* Changed from .form-help to .formHelp */
+    font-size: 0.9rem;
+}
+
+.formWrapper p a { /* Changed from .form-wrapper to .formWrapper */
+    color: #fff;
+}
+
+.formWrapper small { /* Changed from .form-wrapper to .formWrapper */
+    display: block;
+    margin-top: 15px;
+    color: #b3b3b3;
+}
+
+.formWrapper small a { /* Changed from .form-wrapper to .formWrapper */
+    color: #0071eb;
+}
+
+@media (max-width: 740px) {
+    body::before {
+        display: none;
+    }
+
+    nav,
+    .formWrapper { /* Changed from .form-wrapper to .formWrapper */
+        padding: 20px;
+    }
+
+    nav a img {
+        width: 140px;
+    }
+
+    .formWrapper { /* Changed from .form-wrapper to .formWrapper */
+        width: 100%;
+        top: 43%;
+    }
+
+    .formWrapper form { /* Changed from .form-wrapper to .formWrapper */
+        margin: 25px 0 40px;
+    }
+}

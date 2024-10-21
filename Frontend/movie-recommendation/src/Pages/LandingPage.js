@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import style from '../Styles/LandingPage.module.css';
 import { useNavigate } from 'react-router-dom';
@@ -7,15 +6,25 @@ import { useNavigate } from 'react-router-dom';
 function LandingPage() {
     const navigate = useNavigate();
     const [movies, setMovies] = useState([]);
-    const [searchTerm, setSearchTerm] = useState(''); // searchTerm replaces selectedMovie
-    const [filteredMovies, setFilteredMovies] = useState([]); // Auto-suggested movies based on searchTerm
+    const [popularMovies, setPopularMovies] = useState([]);
+    const [newReleases, setNewReleases] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredMovies, setFilteredMovies] = useState([]);
     const [recommendedMovies, setRecommendedMovies] = useState([]);
-
+    console.log(recommendedMovies)
     useEffect(() => {
         const fetchMovies = async () => {
+
             try {
                 const response = await axios.get('http://localhost:5000/movies');
-                setMovies(response.data);
+                console.log("HEllo")
+                console.log(response.data);
+                setMovies(response.data);  // Store entire data
+                const popularResponse = await axios.get('http://localhost:5000/movies/popular');
+                setPopularMovies(popularResponse.data);
+
+                const newReleasesResponse = await axios.get('http://localhost:5000/movies/new-releases');
+                setNewReleases(newReleasesResponse.data);
             } catch (error) {
                 console.error('Error fetching movies:', error);
             }
@@ -24,7 +33,29 @@ function LandingPage() {
         fetchMovies();
     }, []);
 
-    // Function to handle search input and filter movies
+    useEffect(() => {
+        const storedRecommendations = localStorage.getItem('recommendedMovies');
+        if (storedRecommendations) {
+            setRecommendedMovies(JSON.parse(storedRecommendations));
+        }
+    }, []);
+    // Listen for changes in localStorage and update recommendedMovies
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const storedRecommendations = localStorage.getItem('recommendedMovies');
+            if (storedRecommendations) {
+                setRecommendedMovies(JSON.parse(storedRecommendations));
+            }
+        };
+
+        // Listen for the storage event
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
+
     const handleSearchChange = (e) => {
         const query = e.target.value;
         setSearchTerm(query);
@@ -41,20 +72,36 @@ function LandingPage() {
     const getRecommendations = async (selectedMovie) => {
         try {
             const response = await axios.post('http://localhost:5000/recommend', { movie: selectedMovie });
-            setRecommendedMovies(response.data);
+
+            // Retrieve existing recommendations from local storage
+            const storedRecommendations = JSON.parse(localStorage.getItem('recommendedMovies')) || [];
+
+            // Combine old recommendations with the new ones, ensuring no duplicates
+            const combinedRecommendations = [...new Set([...response.data, ...storedRecommendations,])];
+
+            // Update the recommendedMovies state
+            setRecommendedMovies(combinedRecommendations);
+
+            // Store updated recommendations in local storage
+            localStorage.setItem('recommendedMovies', JSON.stringify(combinedRecommendations));
+
         } catch (error) {
             console.error('Error fetching recommendations:', error);
         }
     };
 
-    const handleMovieClick = (movie) => {
-        setSearchTerm(movie.title); // Set clicked movie title to the input
-        setFilteredMovies([]); // Clear the suggestions
-        getRecommendations(movie.title); // Fetch recommendations for the selected movie
-    };
 
-    const handleSelectedMovie = (movie) => {
+    const handleSelectedMovie = async (movie) => {
+
         navigate('/moviedetail', { state: { movie } });
+        getRecommendations(movie.title);  // Fetch recommendations based on the selected movie
+    };
+    const handleSelectedMovie2 = async (movieDetail) => {
+        const response = await axios.post('http://localhost:5000/getSelectedMovie', { id: movieDetail.id, title: movieDetail.title });
+        const movie = response.data;
+        console.log(movie)
+        navigate('/moviedetail', { state: { movie } });
+        getRecommendations(movieDetail.title);  // Fetch recommendations based on the selected movie
     };
 
     return (
@@ -63,52 +110,79 @@ function LandingPage() {
                 <h1 style={{ color: 'white' }}>Movie Recommendation System</h1>
             </div>
 
+            {/* Search bar */}
             <div className={style.searchCont}>
-                <div>
-                    <i className="fa fa-search search-icon"></i>
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        placeholder="Type to search for a movie..."
-                        className={style.searchBox}
-                    />
-                    {/* Display auto-suggestions */}
-                    {filteredMovies.length > 0 && (
-                        <div className={style.suggestions}>
-                            {filteredMovies.map((movie) => (
-                                <div
-                                    key={movie.id}
-                                    className={style.suggestionItem}
-                                    onClick={() => handleMovieClick(movie)}
-                                >
-                                    {movie.title}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Type to search for a movie..."
+                    className={style.searchBox}
+                />
+                {filteredMovies.length > 0 && (
+                    <div className={style.suggestions}>
+                        {filteredMovies.map((movie) => (
+                            <div
+                                key={movie.id}
+                                className={style.suggestionItem}
+                                onClick={() => handleSelectedMovie2(movie)}
+                            >
+                                {movie.title}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Popular Movies */}
+            {recommendedMovies && (
+                <div className={style.recommendedSection}>
+                    <div className={style.sectionTitle}>Recommended Movies</div>
+                    <div className={style.movieRow}>
+                        {recommendedMovies.map((movie, index) => (
+                            <div
+                                key={index}
+                                className={style.movieCard}
+                                onClick={() => handleSelectedMovie(movie)}
+                            >
+                                <img src={movie.poster_url} alt={movie.title} className={style.moviePoster} />
+                                <h3 className={style.movieTitle}>{movie.title}</h3>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
-
-            {/* Recommend button */}
-            <div onClick={() => getRecommendations(searchTerm)} className={style.recommendBtn}>
-                Recommend Movies!
-            </div>
-
-            {/* Display recommended movies */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px', gap: '10px' }}>
-                {recommendedMovies.map((movie, index) => (
+            )}
+            <div className={style.sectionTitle}>Popular Movies</div>
+            <div className={style.movieRow}>
+                {popularMovies.map((movie, index) => (
                     <div
                         key={index}
                         className={style.movieCard}
-                        style={{ textAlign: 'center', width: '200px', backgroundColor: '#222', padding: '10px', borderRadius: '10px' }}
                         onClick={() => handleSelectedMovie(movie)}
                     >
-                        <h3 style={{ color: 'white', fontSize: '18px' }}>{movie.title}</h3>
-                        <img src={movie.poster} alt={movie.title} width="150" style={{ borderRadius: '10px' }} />
+                        <img src={movie.poster_url} alt={movie.title} className={style.moviePoster} />
+                        <h3 className={style.movieTitle}>{movie.title}</h3>
                     </div>
                 ))}
             </div>
+
+            {/* New Releases */}
+            <div className={style.sectionTitle}>New Releases</div>
+            <div className={style.movieRow}>
+                {newReleases.map((movie, index) => (
+                    <div
+                        key={index}
+                        className={style.movieCard}
+                        onClick={() => handleSelectedMovie(movie)}
+                    >
+                        <img src={movie.poster_url} alt={movie.title} className={style.moviePoster} />
+                        <h3 className={style.movieTitle}>{movie.title}</h3>
+                    </div>
+                ))}
+            </div>
+
+            {/* Display recommended movies */}
+
         </div>
     );
 }

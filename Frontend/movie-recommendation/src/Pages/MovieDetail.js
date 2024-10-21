@@ -6,12 +6,12 @@ function MovieDetail() {
     const location = useLocation();
     const { movie } = location.state;
     console.log(movie)
-    console.log(movie.rating)
+    console.log(movie.poster_url)
 
     return (
         <div className={style.detailCont}>
             <div className={style.innerCont}>
-                <img src={movie.poster} alt={movie.title} width="300" className={style.moviePoster} />
+                <img src={movie.poster_url} alt={movie.title} width="300" className={style.moviePoster} />
                 <div className={style.movieDetailCont}>
                     <h1 style={{ color: 'white' }}>{movie.title}</h1>
                     

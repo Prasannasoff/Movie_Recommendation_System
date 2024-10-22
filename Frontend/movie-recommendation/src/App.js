@@ -6,6 +6,8 @@ import LandingPage from './Pages/LandingPage';
 import Register from './Pages/Register';
 import './App.css';
 import MovieDetail from './Pages/MovieDetail';
+import TvShow from './Pages/TvShow';
+import SeriesDetail from './Pages/SeriesDetail';
 function App() {
 
   return (
@@ -15,6 +17,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<LandingPage />} />
         <Route path="/moviedetail" element={<MovieDetail />} />
+        <Route path="/tvshow" element={<TvShow />} />
+        <Route path="/seriesdetail" element={<SeriesDetail />} />
+
+
       </Routes>
     </BrowserRouter>
 

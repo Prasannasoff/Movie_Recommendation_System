@@ -6,7 +6,7 @@ import pickle as pk
 import pandas as pd
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment vari ables from .env file
 load_dotenv()
 
 app = Flask(__name__)
@@ -21,7 +21,8 @@ def fetch_movie_details(movie_id):
     api_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}'
     response = requests.get(api_url, timeout=10)
     data = response.json()
-    # Fetch poster, overview, rating, release date
+
+    # Fetch poster, overview, rating, release date, etc.
     poster_url = "https://image.tmdb.org/t/p/w500/" + data.get('poster_path', '')
     description = data.get('overview', 'No description available')
     rating = data.get('vote_average', 'No rating available')
@@ -38,11 +39,25 @@ def fetch_movie_details(movie_id):
     trailer_url = f'https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={API_KEY}'
     video_response = requests.get(trailer_url, timeout=10)
     video_data = video_response.json()
-    
+
     # Find YouTube trailer
     trailers = [video for video in video_data.get('results', []) if video['site'] == 'YouTube' and video['type'] == 'Trailer']
     trailer_key = trailers[0]['key'] if trailers else None
     trailer_link = f'https://www.youtube.com/watch?v={trailer_key}' if trailer_key else 'Trailer not available'
+
+    # Fetch the cast from TMDB API
+    credits_url = f'https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={API_KEY}'
+    credits_response = requests.get(credits_url, timeout=10)
+    credits_data = credits_response.json()
+
+    # Extract cast and director
+    cast = credits_data.get('cast', [])
+    director = next((member['name'] for member in credits_data.get('crew', []) if member['job'] == 'Director'), 'No director available')
+    
+    # Get leading actors (hero and heroine)
+    leading_actors = [actor['name'] for actor in cast if actor['order'] < 2]  # Top 2 actors based on order
+    hero = leading_actors[0] if len(leading_actors) > 0 else 'No hero available'
+    heroine = leading_actors[1] if len(leading_actors) > 1 else 'No heroine available'
 
     return {
         'poster_url': poster_url,
@@ -56,8 +71,12 @@ def fetch_movie_details(movie_id):
         'language': language,
         'budget': budget,
         'status': status,
-        'trailer': trailer_link
+        'trailer': trailer_link,
+        'director': director,
+        'hero': hero,
+        'heroine': heroine
     }
+
 @app.route('/movies/popular', methods=['GET'])
 def get_popular_movies():
     api_url = f'https://api.themoviedb.org/3/movie/popular?api_key={API_KEY}&language=en-US&page=1'  # Fetch popular movies
@@ -71,14 +90,23 @@ def get_popular_movies():
     # Extract movie details and limit to top 10
     movies = []
     for movie in data['results'][:10]:  # Top 10 popular movies
+        movie_id = movie.get('id')
+        # Fetch detailed movie information for spoken_languages and runtime
+        movie_details = fetch_movie_details(movie_id)
+        
         movies.append({
-            'id': movie.get('id'),
+            'id': movie_id,
             'title': movie.get('title'),
             'poster_url': f"https://image.tmdb.org/t/p/w500/{movie.get('poster_path')}" if movie.get('poster_path') else None,
+            'spoken_languages': movie_details['spoken_languages'],
             'description': movie.get('overview'),
             'rating': movie.get('vote_average'),
+            'runtime': movie_details['runtime'],
             'release_date': movie.get('release_date'),
-            'genres' : [genre['name'] for genre in data.get('genres', [])]
+            'genres': movie_details['genres'],
+            'director': movie_details['director'],
+            'hero': movie_details['hero'],
+            'heroine': movie_details['heroine']
 
         })
 
@@ -154,5 +182,32 @@ def recommend():
 
     return jsonify(recommended_movies)
 
+
+endpoints = [
+    'https://api.themoviedb.org/3/tv/popular',
+    'https://api.themoviedb.org/3/tv/top_rated',
+    'https://api.themoviedb.org/3/tv/airing_today',
+    'https://api.themoviedb.org/3/tv/on_the_air'
+]
+@app.route('/getAllShows',methods=['GET'])
+def fetch_tv_shows():
+    all_tv_shows = []
+    for url in endpoints:
+        response = requests.get(f'{url}?api_key={API_KEY}&language=en-US&page=1')
+        if response.status_code == 200:
+            all_tv_shows.extend(response.json()['results'])
+        else:
+            print(f'Error fetching from {url}: {response.status_code}')
+    return jsonify(all_tv_shows)
+
+@app.route('/getPopularShows',methods=['GET'])
+def fetch_popular_shows():
+    response=requests.get(f'https://api.themoviedb.org/3/tv/top_rated?api_key={API_KEY}&language=en-US&page=1')
+    return (response.json()['results'])
+
+@app.route('/getNewShows',methods=['GET'])
+def fetch_new_shows():
+    response=requests.get(f'https://api.themoviedb.org/3/tv/on_the_air?api_key={API_KEY}&language=en-US&page=1')
+    return (response.json()['results'])
 if __name__ == "__main__":
     app.run(debug=True)

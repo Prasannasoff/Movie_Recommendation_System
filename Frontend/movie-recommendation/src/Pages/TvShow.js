@@ -3,7 +3,7 @@ import axios from 'axios';
 import style from '../Styles/LandingPage.module.css';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
-function LandingPage() {
+function TvShow() {
     const navigate = useNavigate();
     const [movies, setMovies] = useState([]);
     const [popularMovies, setPopularMovies] = useState([]);
@@ -15,13 +15,13 @@ function LandingPage() {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/movies');
+                const response = await axios.get('http://localhost:5000/getAllShows');
                 setMovies(response.data);
-
-                const popularResponse = await axios.get('http://localhost:5000/movies/popular');
+                console.log("Tv SHhow", response.data);
+                const popularResponse = await axios.get('http://localhost:5000/getPopularShows');
                 setPopularMovies(popularResponse.data);
-                console.log("Popularmovies",popularResponse.data);
-                const newReleasesResponse = await axios.get('http://localhost:5000/movies/new-releases');
+                console.log("Popular Show", popularResponse.data)
+                const newReleasesResponse = await axios.get('http://localhost:5000/getNewShows');
                 setNewReleases(newReleasesResponse.data);
             } catch (error) {
                 console.error('Error fetching movies:', error);
@@ -30,36 +30,13 @@ function LandingPage() {
         fetchMovies();
     }, []);
 
-    // Load recommended movies from localStorage on component mount
-    useEffect(() => {
-        const storedRecommendations = localStorage.getItem('recommendedMovies');
-        if (storedRecommendations) {
-            setRecommendedMovies(JSON.parse(storedRecommendations));
-        }
-    }, []);
-
-    // Listen for changes in localStorage and update recommendedMovies
-    useEffect(() => {
-        const handleStorageChange = () => {
-            const storedRecommendations = localStorage.getItem('recommendedMovies');
-            if (storedRecommendations) {
-                setRecommendedMovies(JSON.parse(storedRecommendations));
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, []);
 
     const handleSearchChange = (e) => {
         const query = e.target.value;
         setSearchTerm(query);
         if (query) {
             const suggestions = movies.filter((movie) =>
-                movie.title.toLowerCase().includes(query.toLowerCase())
+                movie.name.toLowerCase().includes(query.toLowerCase())
             );
             setFilteredMovies(suggestions);
         } else {
@@ -86,16 +63,9 @@ function LandingPage() {
         }
     };
 
-    const handleSelectedMovie = async (movie) => {
-        navigate('/moviedetail', { state: { movie } });
-        getRecommendations(movie.title);  // Fetch recommendations based on the selected movie
-    };
+    const handleSelectedMovie = async (seriesDetail) => {
+        navigate('/seriesdetail', { state: { seriesDetail } });
 
-    const handleSelectedMovie2 = async (movieDetail) => {
-        const response = await axios.post('http://localhost:5000/getSelectedMovie', { id: movieDetail.id, title: movieDetail.title });
-        const movie = response.data;
-        navigate('/moviedetail', { state: { movie } });
-        getRecommendations(movieDetail.title);  // Fetch recommendations based on the selected movie
     };
 
     return (
@@ -113,21 +83,21 @@ function LandingPage() {
                     />
                     {filteredMovies.length > 0 && (
                         <div className={style.suggestions}>
-                            {filteredMovies.map((movie) => (
+                            {filteredMovies.map((series) => (
                                 <div
-                                    key={movie.id}
+                                    key={series.id}
                                     className={style.suggestionItem}
-                                    onClick={() => handleSelectedMovie2(movie)}
+                                    onClick={() => handleSelectedMovie(series)}
                                 >
-                                    {movie.title}
+                                    {series.name}
                                 </div>
                             ))}
                         </div>
                     )}
                 </div>
                 <div className={style.title}>
-                    <div style={{ color: 'white',fontSize:'45px',fontFamily:'Arial',fontWeight:'600' }}>Movies</div>
-                    <div style={{color:'grey',fontSize:'22px'}}>When Tony Stark's world is torn apart by a formidable terrorist called the Mandarin, he starts an odyssey of rebuilding and retribution.</div>
+                    <div style={{ color: 'white', fontSize: '45px', fontFamily: 'Arial', fontWeight: '600' }}>Tv Shows</div>
+                    <div style={{ color: 'grey', fontSize: '22px' }}>When Tony Stark's world is torn apart by a formidable terrorist called the Mandarin, he starts an odyssey of rebuilding and retribution.</div>
                 </div>
             </div>
             <div className={style.landingCont}>
@@ -153,14 +123,17 @@ function LandingPage() {
                 {/* Popular Movies */}
                 <div className={style.sectionTitle}>Popular Movies</div>
                 <div className={style.movieRow}>
-                    {popularMovies.map((movie, index) => (
+                    {popularMovies.map((series, index) => (
                         <div
                             key={index}
                             className={style.movieCard}
-                            onClick={() => handleSelectedMovie(movie)}
+                            onClick={() => handleSelectedMovie(series)}
                         >
-                            <img src={movie.poster_url} alt={movie.title} className={style.moviePoster} />
-                            <h3 className={style.movieTitle}>{movie.title}</h3>
+
+
+                            <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} alt={series.name} className={style.moviePoster} />
+
+                            <h3 className={style.movieTitle}>{series.name}</h3>
                         </div>
                     ))}
                 </div>
@@ -168,14 +141,14 @@ function LandingPage() {
                 {/* New Releases */}
                 <div className={style.sectionTitle}>New Releases</div>
                 <div className={style.movieRow}>
-                    {newReleases.map((movie, index) => (
+                    {newReleases.map((series, index) => (
                         <div
                             key={index}
                             className={style.movieCard}
-                            onClick={() => handleSelectedMovie(movie)}
+                            onClick={() => handleSelectedMovie(series)}
                         >
-                            <img src={movie.poster_url} alt={movie.title} className={style.moviePoster} />
-                            <h3 className={style.movieTitle}>{movie.title}</h3>
+                            <img src={`https://image.tmdb.org/t/p/w500${series.poster_path}`} alt={series.name} className={style.moviePoster} />
+                            <h3 className={style.movieTitle}>{series.name}</h3>
                         </div>
                     ))}
                 </div>
@@ -184,4 +157,4 @@ function LandingPage() {
     );
 }
 
-export default LandingPage;
+export default TvShow;

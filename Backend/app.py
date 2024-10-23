@@ -19,7 +19,7 @@ df = pd.DataFrame(dfs)
 
 def fetch_movie_details(movie_id):
     api_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}'
-    response = requests.get(api_url, timeout=10)
+    response = requests.get(api_url)
     data = response.json()
 
     # Fetch poster, overview, rating, release date, etc.
@@ -53,6 +53,8 @@ def fetch_movie_details(movie_id):
     # Extract cast and director
     cast = credits_data.get('cast', [])
     director = next((member['name'] for member in credits_data.get('crew', []) if member['job'] == 'Director'), 'No director available')
+    writers = [member['name'] for member in credits_data.get('crew', []) if member['job'] in ['Screenplay', 'Writer', 'Story']]
+
     
     # Get leading actors (hero and heroine)
     leading_actors = [actor['name'] for actor in cast if actor['order'] < 2]  # Top 2 actors based on order
@@ -74,13 +76,14 @@ def fetch_movie_details(movie_id):
         'trailer': trailer_link,
         'director': director,
         'hero': hero,
-        'heroine': heroine
+        'heroine': heroine,
+        'writers':writers
     }
 
 @app.route('/movies/popular', methods=['GET'])
 def get_popular_movies():
     api_url = f'https://api.themoviedb.org/3/movie/popular?api_key={API_KEY}&language=en-US&page=1'  # Fetch popular movies
-    response = requests.get(api_url, timeout=10)
+    response = requests.get(api_url)
     data = response.json()
 
     # Check if the request was successful
@@ -106,7 +109,8 @@ def get_popular_movies():
             'genres': movie_details['genres'],
             'director': movie_details['director'],
             'hero': movie_details['hero'],
-            'heroine': movie_details['heroine']
+            'heroine': movie_details['heroine'],
+            'writers': movie_details['writers']
 
         })
 
@@ -177,7 +181,12 @@ def recommend():
             'spoken_languages': movie_details['spoken_languages'],
             'budget': movie_details['budget'],
             'status': movie_details['status'],
-            'trailer': movie_details['trailer']
+            'trailer': movie_details['trailer'],
+            'writers': movie_details['writers'],
+            'director': movie_details['director'],
+            'hero': movie_details['hero'],
+            'heroine': movie_details['heroine'],
+
         })
 
     return jsonify(recommended_movies)

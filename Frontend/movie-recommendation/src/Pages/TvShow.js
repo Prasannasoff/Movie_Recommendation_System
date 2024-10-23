@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import style from '../Styles/LandingPage.module.css';
+import style from '../Styles/TvShow.module.css';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
 function TvShow() {

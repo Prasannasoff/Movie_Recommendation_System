@@ -3,147 +3,210 @@
     background-color: rgb(6, 7, 8);
     width: 100%;
     height: 100vh;
-  
+
 }
-.innerCont{
+
+.innerCont {
     display: flex;
     margin-left: 80px;
     width: 100%;
     align-items: center;
     flex-direction: row;
-    gap:10px;
+    gap: 10px;
     padding: 20px;
 }
-.mainCont{
+
+.mainCont {
     display: flex;
     justify-content: space-between;
- 
-}
-.movieDetailCont{
-    display: flex;
-    flex-direction: column;
-    gap:15px;
-    padding-left:20px;
 
 }
+
+.movieDetailCont {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-left: 20px;
+
+}
+
 .title {
     font-size: 70px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     color: #fff;
-  
+
 }
 
-.moviePoster{
+.moviePoster {
     border-radius: 40px;
     object-fit: contain;
-    width:25%;
+    width: 25%;
     height: 60%;
-    
-}
-.genresCont{
-    display: flex;
-    gap:10px;
-    margin-top: -10px;
-   
-}
-.genres{
-    padding: 6px;
-    padding-left:15px ;
-    padding-right:15px ;
 
-    border-radius: 10px;
+}
+
+.genresCont {
+    display: flex;
+    gap: 10px;
+
+
+}
+
+.genres {
+    padding: 6px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
-    background-color: rgb(71, 71, 71);
+    background-color: rgb(33, 35, 49);
     color: rgb(143, 143, 143);
     font-size: 20px;
-    
+
 }
-.otherMovieDetail{
+
+.otherMovieDetail {
     display: flex;
     align-items: center;
-    gap:10px;
-    
+    gap: 10px;
+
 }
-.ratingCont{
+
+.ratingCont {
     display: flex;
     align-items: center;
-    gap:10px;
-    
-    color:rgb(71, 71, 71);
+    gap: 10px;
+
+    color: rgb(71, 71, 71);
     font-size: 20px;
-    font-weight: 700; 
+    font-weight: 700;
 }
-.rateImgCont{
+
+.rateImgCont {
     width: 50px;
     height: 50px;
 }
-.imdbPng{
-    width:100%;
+
+.imdbPng {
+    width: 100%;
     height: 100%;
 }
-.runtimeCont{
+
+.runtimeCont {
     display: flex;
     align-items: center;
-    color:rgb(71, 71, 71);
+    gap:10px;
+    color: rgb(71, 71, 71);
     font-size: 20px;
     font-weight: 700;
-    
+
 }
-.runtimeImgCont{
+
+.runtimeImgCont {
     width: 50px;
     height: 50px;
 }
-.runtimePng{
-    width:100%;
+
+.runtimePng {
+    width: 100%;
     height: 100%;
 }
-.languageCont{
+
+.languageCont {
     display: flex;
     align-items: center;
-    color:rgb(71, 71, 71);
+    color: rgb(71, 71, 71);
     font-size: 20px;
     font-weight: 700;
-    gap:10px;
-    
+    gap: 10px;
+
 }
-.languageImgCont{
+
+.languageImgCont {
     width: 40px;
     height: 40px;
 }
-.languagePng{
-    width:100%;
+
+.languagePng {
+    width: 100%;
     height: 100%;
 }
-.languageList{
+
+.languageList {
     display: flex;
     flex-direction: row;
-    gap:10px
+    gap: 10px
 }
-.movieDesc{
-    width:60%;
+
+.movieDesc {
+    width: 60%;
     color: grey;
     font-size: 20px;
 }
-.trailerButtonCont {
+
+.buttonCont {
+    display: flex;
+    gap: 10px;
+    align-items: center;
     margin-top: 20px;
 }
 
+
 .trailerButton {
-    background-color: #ffcc00;
-    color: black;
+    background-color: #77adffc4;
+    color: rgba(0, 0, 0, 0.701);
+    font-weight: 530;
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+}
+
+.favouriteButton {
+    background-color: #89b8ff00;
+    color: #77adffc4;
+    border-width: 1px;
+    border-color:  #77adffc4; 
+    border-style: solid;
+    font-weight: 530;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 18px;
 }
 
 .trailerButton:hover {
-    background-color: #ffaa00;
+    background-color: #ffaa0000;
+    border-style: solid;
+    border-width: 1px;
+    color:#77adffc4;
+    border-color: rgb(74, 157, 235);
 }
 
+.castCont {
+    display: flex;
+    flex-direction: column;
+    padding-right: 50px;
+    padding-top: 30px;
+}
+
+.castDetail {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    min-height: 150px;
+
+
+}
+
+.castCont hr {
+    border-color: #4556727d;
+    border-width: 0.2px;
+    width: 100%;
+    margin-bottom: 10px;
+}
 
 @media (max-width: 768px) {
     .detailCont {

@@ -2,6 +2,8 @@ import React from 'react'
 import { useLocation } from 'react-router-dom';
 import style from '../Styles/MovieDetail.module.css'
 import Sidebar from '../Components/Sidebar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 function MovieDetail() {
     const location = useLocation();
     const { movie } = location.state;
@@ -37,6 +39,12 @@ function MovieDetail() {
                                 </div>
                                 <div>{movie.runtime} min</div>
                             </div>
+                            <div className={style.runtimeCont}>
+                                <div className={style.runtimeImgCont}>
+                                    <img src='dollar.png' className={style.runtimePng} alt='Runtime' />
+                                </div>
+                                <div>{movie.budget}</div>
+                            </div>
                         </div>
 
                         {/* Check if spoken_languages is defined */}
@@ -54,18 +62,45 @@ function MovieDetail() {
                         <div className={style.movieDesc}>{movie.description}</div>
 
                         <div style={{ color: 'white', marginTop: '5px' }}>Release Date: {movie.release_date}</div>
-
-                        {/* Add the Watch Trailer button */}
-                        {movie.trailer !== 'Trailer not available' && (
-                            <div className={style.trailerButtonCont}>
-                                <button
-                                    className={style.trailerButton}
-                                    onClick={() => window.open(movie.trailer, '_blank')}
-                                >
-                                    Watch Trailer
-                                </button>
+                        <div className={style.buttonCont}>
+                            {/* Add the Watch Trailer button */}
+                            {movie.trailer !== 'Trailer not available' && (
+                                <div className={style.trailerButtonCont}>
+                                    <button
+                                        className={style.trailerButton}
+                                        onClick={() => window.open(movie.trailer, '_blank')}
+                                    >
+                                        WATCH TRAILER
+                                    </button>
+                                </div>
+                            )}
+                            <div className={style.favouriteButton}>
+                                <div style={{ display: 'flex' ,alignItems:'center',gap:'10px'}}>
+                                    <div>TO WATCHLIST</div>
+                                    <FontAwesomeIcon icon={faPlus} className={style.icon} />
+                                </div>
                             </div>
-                        )}
+                        </div>
+                    </div>
+                    <div className={style.castCont}>
+                        <hr />
+                        <div className={style.castDetail}>
+                            <div style={{ color: 'rgb(50,71,121)', fontSize: '25px', fontWeight: 600 }}>Director</div>
+                            <div style={{ color: 'grey', fontSize: '20px' }}>{movie.director}</div>
+                        </div>
+                        <hr />
+
+                        <div className={style.castDetail}>
+                            <div style={{ color: 'rgb(50,71,121)', fontSize: '25px', fontWeight: 600 }}>Writers</div>
+                            {movie.writers.map(data => <div style={{ color: 'grey', fontSize: '20px' }}>{data} </div>)}
+                        </div>
+                        <hr />
+                        <div className={style.castDetail}>
+                            <div style={{ color: 'rgb(50,71,121)', fontSize: '25px', fontWeight: 600 }}>Stars</div>
+                            <div style={{ color: 'grey', fontSize: '20px' }}>{movie.hero} . {movie.heroine}</div>
+                        </div>
+                        <hr />
+
                     </div>
                 </div>
             </div>

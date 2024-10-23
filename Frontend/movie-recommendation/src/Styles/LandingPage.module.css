@@ -6,7 +6,7 @@
   margin-left: 80px; /* Same width as the sidebar to avoid overlap */
   flex-grow: 1;
   padding: 20px;
-  background-color: rgb(6, 7, 8);
+  background-color: rgb(0, 0, 0);
   color: white;
   height: 100%;
 }
@@ -15,7 +15,7 @@
   flex-direction: column;
   margin-left: 80px; /* Same width as the sidebar to avoid overlap */
   height: 380px;
-  background-color: rgb(6, 7, 8); /* Background color for the rest of the header */
+  background-color: rgb(2, 2, 2); /* Background color for the rest of the header */
   width: calc(100% - 80px); /* Ensure it fits within the window minus the sidebar */
   background-image: url("../avatar.jpg");
   background-position: right; /* Align the image to the right */

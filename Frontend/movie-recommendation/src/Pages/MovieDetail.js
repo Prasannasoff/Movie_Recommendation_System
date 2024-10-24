@@ -3,12 +3,13 @@ import { useLocation } from 'react-router-dom';
 import style from '../Styles/MovieDetail.module.css'
 import Sidebar from '../Components/Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
+import { faPlus, faAngleRight, faA } from '@fortawesome/free-solid-svg-icons';
 function MovieDetail() {
     const location = useLocation();
     const { movie } = location.state;
-    console.log(movie)
-    console.log(movie.poster_url)
+    console.log("MovieDetial", movie)
+
 
     return (
         <div className={style.detailCont}>
@@ -75,7 +76,7 @@ function MovieDetail() {
                                 </div>
                             )}
                             <div className={style.favouriteButton}>
-                                <div style={{ display: 'flex' ,alignItems:'center',gap:'10px'}}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <div>TO WATCHLIST</div>
                                     <FontAwesomeIcon icon={faPlus} className={style.icon} />
                                 </div>
@@ -84,27 +85,65 @@ function MovieDetail() {
                     </div>
                     <div className={style.castCont}>
                         <hr />
-                        <div className={style.castDetail}>
-                            <div style={{ color: 'rgb(50,71,121)', fontSize: '25px', fontWeight: 600 }}>Director</div>
-                            <div style={{ color: 'grey', fontSize: '20px' }}>{movie.director}</div>
+                        <div style={{ display: 'flex' }}>
+                            <div className={style.castDetail}>
+                                <div style={{ color: 'rgb(50,71,121)', fontSize: '25px', fontWeight: 600 }}>Director</div>
+                                <div style={{ color: 'grey', fontSize: '20px' }}>{movie.director}</div>
+                            </div>
+                            <div style={{ paddingTop: '20px' }}>
+                                <a
+                                    href={`https://www.google.com/search?q=${encodeURIComponent(movie.director)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <FontAwesomeIcon icon={faAngleRight} color='red' size='1x' />
+
+                                </a>
+                            </div>
                         </div>
                         <hr />
 
                         <div className={style.castDetail}>
                             <div style={{ color: 'rgb(50,71,121)', fontSize: '25px', fontWeight: 600 }}>Writers</div>
-                            {movie.writers.map(data => <div style={{ color: 'grey', fontSize: '20px' }}>{data} </div>)}
+
+                            {movie.writers.map(data => <a
+                                href={`https://www.google.com/search?q=${encodeURIComponent(data)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ textDecoration: 'none' }}
+                            ><div style={{ color: 'grey', fontSize: '20px' }} className={style.castName}>{data} </div></a>)}
+
                         </div>
                         <hr />
                         <div className={style.castDetail}>
                             <div style={{ color: 'rgb(50,71,121)', fontSize: '25px', fontWeight: 600 }}>Stars</div>
-                            <div style={{ color: 'grey', fontSize: '20px' }}>{movie.hero} . {movie.heroine}</div>
+                            <a
+                                href={`https://www.google.com/search?q=${encodeURIComponent(movie.hero)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ textDecoration: 'none' }}
+
+
+                            >
+                                <div style={{ color: 'grey', fontSize: '20px' }} className={style.castName}>{movie.hero}</div>
+
+                            </a>
+                            <a
+                                href={`https://www.google.com/search?q=${encodeURIComponent(movie.heroine)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <div style={{ color: 'grey', fontSize: '20px' }} className={style.castName}>{movie.heroine}</div>
+
+                            </a>
                         </div>
                         <hr />
 
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

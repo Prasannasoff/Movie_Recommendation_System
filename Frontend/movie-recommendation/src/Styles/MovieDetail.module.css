@@ -154,21 +154,23 @@
 
 
 .trailerButton {
-    background-color: #77adffc4;
+    background-color: #77cbffc4;
     color: rgba(0, 0, 0, 0.701);
     font-weight: 530;
     padding: 10px 20px;
     border: none;
     border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(87, 184, 237, 0.651);
     cursor: pointer;
     font-size: 18px;
 }
 
 .favouriteButton {
     background-color: #89b8ff00;
-    color: #77adffc4;
+    color: #77cbffc4;
     border-width: 1px;
-    border-color:  #77adffc4; 
+    border-color:  #77cbffc4; 
+    
     border-style: solid;
     font-weight: 530;
     padding: 10px 20px;
@@ -200,7 +202,9 @@
 
 
 }
-
+.castName:hover{
+    text-decoration: underline;
+}
 .castCont hr {
     border-color: #4556727d;
     border-width: 0.2px;

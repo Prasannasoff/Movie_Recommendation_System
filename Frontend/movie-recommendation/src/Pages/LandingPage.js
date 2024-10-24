@@ -3,6 +3,8 @@ import axios from 'axios';
 import style from '../Styles/LandingPage.module.css';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
+import ClipLoader from 'react-spinners/ClipLoader';
+
 function LandingPage() {
     const navigate = useNavigate();
     const [movies, setMovies] = useState([]);
@@ -11,18 +13,19 @@ function LandingPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredMovies, setFilteredMovies] = useState([]);
     const [recommendedMovies, setRecommendedMovies] = useState([]);
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const fetchMovies = async () => {
             try {
+                setLoading(true);
                 const response = await axios.get('http://localhost:5000/movies');
                 setMovies(response.data);
-
                 const popularResponse = await axios.get('http://localhost:5000/movies/popular');
                 setPopularMovies(popularResponse.data);
-                console.log("Popularmovies",popularResponse.data);
+                console.log("Popularmovies", popularResponse.data);
                 const newReleasesResponse = await axios.get('http://localhost:5000/movies/new-releases');
                 setNewReleases(newReleasesResponse.data);
+                setLoading(false);
             } catch (error) {
                 console.error('Error fetching movies:', error);
             }
@@ -46,9 +49,7 @@ function LandingPage() {
                 setRecommendedMovies(JSON.parse(storedRecommendations));
             }
         };
-
         window.addEventListener('storage', handleStorageChange);
-
         return () => {
             window.removeEventListener('storage', handleStorageChange);
         };
@@ -69,38 +70,64 @@ function LandingPage() {
 
     const getRecommendations = async (selectedMovie) => {
         try {
+            setLoading(true)
             const response = await axios.post('http://localhost:5000/recommend', { movie: selectedMovie });
-
+    
+            // Get stored recommendations from localStorage or initialize as empty array if not present
             const storedRecommendations = JSON.parse(localStorage.getItem('recommendedMovies')) || [];
-
-
+    
+            // Combine new recommendations with existing ones and remove duplicates using Set
             const combinedRecommendations = [...new Set([...response.data, ...storedRecommendations])];
-
+    
+            // Limit to a certain number of recommendations, for example, 10
             const limitedRecommendations = combinedRecommendations.slice(0, 10);
 
             setRecommendedMovies(limitedRecommendations);
+            console.log("Recommendation",limitedRecommendations);
             localStorage.setItem('recommendedMovies', JSON.stringify(limitedRecommendations));
-
+            setLoading(false)
+    
         } catch (error) {
             console.error('Error fetching recommendations:', error);
         }
     };
+    
 
-    const handleSelectedMovie = async (movie) => {
-        navigate('/moviedetail', { state: { movie } });
-        getRecommendations(movie.title);  // Fetch recommendations based on the selected movie
-    };
-
-    const handleSelectedMovie2 = async (movieDetail) => {
+    const handleSelectedMovie = async (movieDetail) => {
+        setLoading(true);
         const response = await axios.post('http://localhost:5000/getSelectedMovie', { id: movieDetail.id, title: movieDetail.title });
+        console.log("Selected Movie", response.data);
         const movie = response.data;
         navigate('/moviedetail', { state: { movie } });
-        getRecommendations(movieDetail.title);  // Fetch recommendations based on the selected movie
+        setLoading(false);
+
+    };
+    const handleSelectedMovie3 = async (movieDetail) => {
+        setLoading(true);
+        const response = await axios.post('http://localhost:5000/getSelectedMovie', { id: movieDetail.id, title: movieDetail.title });
+        console.log("Selected Movie", response.data);
+        const movie = response.data;
+        getRecommendations(movie.title); 
+        navigate('/moviedetail', { state: { movie } });
+        setLoading(false);
+
+    };
+
+    const handleSelectedMovie2 = async (movie) => {
+        setLoading(true);
+        navigate('/moviedetail', { state: { movie } });
+        getRecommendations(movie.title); 
+        setLoading(false);
     };
 
     return (
         <div className={style.MainlandingCont}>
             <Sidebar />
+            {loading && (
+                <div className={style.loaderContainer}>
+                    <ClipLoader color="#2AA7FF" size={50} />
+                </div>
+            )}
             <div className={style.header}>
                 {/* Search bar */}
                 <div className={style.searchCont}>
@@ -117,7 +144,7 @@ function LandingPage() {
                                 <div
                                     key={movie.id}
                                     className={style.suggestionItem}
-                                    onClick={() => handleSelectedMovie2(movie)}
+                                    onClick={() => handleSelectedMovie3(movie)}
                                 >
                                     {movie.title}
                                 </div>
@@ -126,12 +153,11 @@ function LandingPage() {
                     )}
                 </div>
                 <div className={style.title}>
-                    <div style={{ color: 'white',fontSize:'45px',fontFamily:'Arial',fontWeight:'600' }}>Movies</div>
-                    <div style={{color:'grey',fontSize:'22px'}}>When Tony Stark's world is torn apart by a formidable terrorist called the Mandarin, he starts an odyssey of rebuilding and retribution.</div>
+                    <div style={{ color: 'white', fontSize: '45px', fontFamily: 'Arial', fontWeight: '600' }}>Movies</div>
+                    <div style={{ color: 'grey', fontSize: '22px' }}>When Tony Stark's world is torn apart by a formidable terrorist called the Mandarin, he starts an odyssey of rebuilding and retribution.</div>
                 </div>
             </div>
             <div className={style.landingCont}>
-                {/* Recommended Movies */}
                 {recommendedMovies && recommendedMovies.length > 0 && (
                     <div className={style.recommendedSection}>
                         <div className={style.sectionTitle}>Recommended Movies</div>

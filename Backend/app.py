@@ -82,7 +82,7 @@ def fetch_movie_details(movie_id):
 
 @app.route('/movies/popular', methods=['GET'])
 def get_popular_movies():
-    api_url = f'https://api.themoviedb.org/3/movie/popular?api_key={API_KEY}&language=en-US&page=1'  # Fetch popular movies
+    api_url = f'https://api.themoviedb.org/3/movie/top_rated?api_key={API_KEY}&language=en-US&page=1'  # Fetch popular movies
     response = requests.get(api_url)
     data = response.json()
 
@@ -95,23 +95,13 @@ def get_popular_movies():
     for movie in data['results'][:10]:  # Top 10 popular movies
         movie_id = movie.get('id')
         # Fetch detailed movie information for spoken_languages and runtime
-        movie_details = fetch_movie_details(movie_id)
+        movie_title = movie.get('title')
+
         
         movies.append({
             'id': movie_id,
-            'title': movie.get('title'),
+            'title': movie_title,
             'poster_url': f"https://image.tmdb.org/t/p/w500/{movie.get('poster_path')}" if movie.get('poster_path') else None,
-            'spoken_languages': movie_details['spoken_languages'],
-            'description': movie.get('overview'),
-            'rating': movie.get('vote_average'),
-            'runtime': movie_details['runtime'],
-            'release_date': movie.get('release_date'),
-            'genres': movie_details['genres'],
-            'director': movie_details['director'],
-            'hero': movie_details['hero'],
-            'heroine': movie_details['heroine'],
-            'writers': movie_details['writers']
-
         })
 
     return jsonify(movies)
@@ -126,18 +116,15 @@ def get_new_releases():
     if response.status_code != 200 or 'results' not in data:
         return jsonify({'error': 'Failed to fetch new releases'}), 500
 
-    # Extract movie details and limit to top 10
     movies = []
-    for movie in data['results'][:10]:  # Top 10 new releases
+    for movie in data['results'][:10]:
+        movie_id = movie.get('id')
+        # Fetch detailed movie information for spoken_languages and runtime
+        movie_title = movie.get('title')  # Top 10 new releases
         movies.append({
-            'id': movie.get('id'),
-            'title': movie.get('title'),
+            'id': movie_id,
+            'title': movie_title,
             'poster_url': f"https://image.tmdb.org/t/p/w500/{movie.get('poster_path')}" if movie.get('poster_path') else None,
-            'description': movie.get('overview'),
-            'rating': movie.get('vote_average'),
-            'release_date': movie.get('release_date'),
-            'genres' : [genre['name'] for genre in data.get('genres', [])]
-
         })
 
     return jsonify(movies)
@@ -151,6 +138,7 @@ def get_movies():
 def getSelectedMovie():
     movieId = request.json.get('id')
     movieTitle = request.json.get('title')
+    print(movieTitle)
     movie_details=fetch_movie_details(movieId)
     movie_details['title'] = movieTitle 
     print(movie_details)
@@ -161,35 +149,31 @@ def recommend():
     movie = request.json.get('movie')
     recommended_movies = []
 
+    # Find the index of the movie in the DataFrame
     index = df[df['title'] == movie].index[0]
     distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
 
     for i in distances[1:6]:  # Top 5 recommendations
-        movie_title = df.iloc[i[0]].title
-        movie_id = df.iloc[i[0]].id
-        movie_details = fetch_movie_details(movie_id)
+        movie_title = df.iloc[i[0]]['title']
+        movie_id = df.iloc[i[0]]['id']
+        tmdb_url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}&language=en-US"
+        response = requests.get(tmdb_url)
 
-        recommended_movies.append({
-            'title': movie_title,
-            'poster_url': movie_details['poster_url'],
-            'description': movie_details['description'],
-            'rating': movie_details['rating'],
-            'release_date': movie_details['release_date'],
-            'genres': movie_details['genres'],
-            'runtime': movie_details['runtime'],
-            'tagline': movie_details['tagline'],
-            'spoken_languages': movie_details['spoken_languages'],
-            'budget': movie_details['budget'],
-            'status': movie_details['status'],
-            'trailer': movie_details['trailer'],
-            'writers': movie_details['writers'],
-            'director': movie_details['director'],
-            'hero': movie_details['hero'],
-            'heroine': movie_details['heroine'],
-
-        })
+        if response.status_code == 200:
+            movie_details = response.json()
+            poster_path = movie_details.get('poster_path', None)  # Get poster_path if available
+            
+            # Convert types to ensure they're JSON serializable
+            recommended_movies.append({
+                'title': movie_title,
+                'id': int(movie_id),  # Convert to native Python int
+                'poster_url': f"https://image.tmdb.org/t/p/w500/{poster_path}" if poster_path else None
+            })
+        else:
+            print(f"Failed to fetch details for movie ID {movie_id}")
 
     return jsonify(recommended_movies)
+
 
 
 endpoints = [

@@ -8,12 +8,14 @@ import './App.css';
 import MovieDetail from './Pages/MovieDetail';
 import TvShow from './Pages/TvShow';
 import SeriesDetail from './Pages/SeriesDetail';
+import HomePage from './Pages/HomePage'
 function App() {
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<LandingPage />} />
         <Route path="/moviedetail" element={<MovieDetail />} />

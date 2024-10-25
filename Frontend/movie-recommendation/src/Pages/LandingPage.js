@@ -112,14 +112,6 @@ function LandingPage() {
         setLoading(false);
 
     };
-
-    const handleSelectedMovie2 = async (movie) => {
-        setLoading(true);
-        navigate('/moviedetail', { state: { movie } });
-        getRecommendations(movie.title); 
-        setLoading(false);
-    };
-
     return (
         <div className={style.MainlandingCont}>
             <Sidebar />
@@ -154,7 +146,7 @@ function LandingPage() {
                 </div>
                 <div className={style.title}>
                     <div style={{ color: 'white', fontSize: '45px', fontFamily: 'Arial', fontWeight: '600' }}>Movies</div>
-                    <div style={{ color: 'grey', fontSize: '22px' }}>When Tony Stark's world is torn apart by a formidable terrorist called the Mandarin, he starts an odyssey of rebuilding and retribution.</div>
+                    <div style={{ color: 'grey', fontSize: '22px' }}>Explore a world of films perfectly suited to your unique preferences. Our app learns from your choices and delivers movie recommendations that feel just right, every time.</div>
                 </div>
             </div>
             <div className={style.landingCont}>
@@ -166,7 +158,7 @@ function LandingPage() {
                                 <div
                                     key={index}
                                     className={style.movieCard}
-                                    onClick={() => handleSelectedMovie(movie)}
+                                    onClick={() => handleSelectedMovie3(movie)}
                                 >
                                     <img src={movie.poster_url} alt={movie.title} className={style.moviePoster} />
                                     <h3 className={style.movieTitle}>{movie.title}</h3>

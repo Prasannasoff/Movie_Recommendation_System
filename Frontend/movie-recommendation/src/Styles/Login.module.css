@@ -6,11 +6,16 @@
     position: absolute;
     left: 0;
     top: 0;
-    opacity: 0.5;
+    opacity: 0.7;
+  
+
     width: 100%;
     height: 100%;
-    background: url("../bgImage.jpg") center/cover no-repeat; /* Simplified background property */
-    z-index: 0; /* Ensure the background is behind other elements */
+    background: url("../bgImage.jpg") center/cover no-repeat;
+
+    /* Simplified background property */
+    z-index: 0;
+    /* Ensure the background is behind other elements */
 }
 
 nav {
@@ -23,7 +28,8 @@ nav a img {
     width: 167px;
 }
 
-.formWrapper { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper {
+    /* Changed from .form-wrapper to .formWrapper */
     position: absolute;
     left: 50%;
     top: 50%;
@@ -32,25 +38,30 @@ nav a img {
     width: 450px;
     transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.75);
-    z-index: 1; /* Ensure the form is above the background */
+    z-index: 1;
+    /* Ensure the form is above the background */
 }
 
-.formWrapper h2 { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper h2 {
+    /* Changed from .form-wrapper to .formWrapper */
     color: #fff;
     font-size: 2rem;
 }
 
-.formWrapper form { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper form {
+    /* Changed from .form-wrapper to .formWrapper */
     margin: 25px 0 65px;
 }
 
-.formControl { /* Changed from .form-control to .formControl */
+.formControl {
+    /* Changed from .form-control to .formControl */
     height: 50px;
     position: relative;
     margin-bottom: 16px;
 }
 
-.formControl input { /* Changed from .form-control to .formControl */
+.formControl input {
+    /* Changed from .form-control to .formControl */
     height: 100%;
     width: 100%;
     background: #333;
@@ -62,12 +73,14 @@ nav a img {
     padding: 0 20px;
 }
 
-.formControl input:is(:focus, :valid) { /* Changed from .form-control to .formControl */
+.formControl input:is(:focus, :valid) {
+    /* Changed from .form-control to .formControl */
     background: #444;
     padding: 16px 20px 0;
 }
 
-.formControl label { /* Changed from .form-control to .formControl */
+.formControl label {
+    /* Changed from .form-control to .formControl */
     position: absolute;
     left: 20px;
     top: 50%;
@@ -78,7 +91,8 @@ nav a img {
     transition: all 0.1s ease;
 }
 
-.formControl input:is(:focus, :valid)~label { /* Changed from .form-control to .formControl */
+.formControl input:is(:focus, :valid)~label {
+    /* Changed from .form-control to .formControl */
     font-size: 0.75rem;
     transform: translateY(-130%);
 }
@@ -87,7 +101,9 @@ form button {
     width: 100%;
     padding: 16px 0;
     font-size: 1rem;
-    background: #e50914;
+    background: #77cbffc4;
+    box-shadow: 0 5px 20px rgba(87, 184, 237, 0.799);
+
     color: #fff;
     font-weight: 500;
     border-radius: 4px;
@@ -99,50 +115,60 @@ form button {
 }
 
 form button:hover {
-    background: #c40812;
+    background: none;
 }
 
-.formWrapper a { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper a {
+    /* Changed from .form-wrapper to .formWrapper */
     text-decoration: none;
 }
 
-.formWrapper a:hover { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper a:hover {
+    /* Changed from .form-wrapper to .formWrapper */
     text-decoration: underline;
 }
 
-.formWrapper :where(label, p, small, a) { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper :where(label, p, small, a) {
+    /* Changed from .form-wrapper to .formWrapper */
     color: #b3b3b3;
 }
 
-form .formHelp { /* Changed from .form-help to .formHelp */
+form .formHelp {
+    /* Changed from .form-help to .formHelp */
     display: flex;
     justify-content: space-between;
 }
 
-form .rememberMe { /* Changed from .remember-me to .rememberMe */
+form .rememberMe {
+    /* Changed from .remember-me to .rememberMe */
     display: flex;
 }
 
-form .rememberMe input { /* Changed from .remember-me to .rememberMe */
+form .rememberMe input {
+    /* Changed from .remember-me to .rememberMe */
     margin-right: 5px;
     accent-color: #b3b3b3;
 }
 
-form .formHelp :where(label, a) { /* Changed from .form-help to .formHelp */
+form .formHelp :where(label, a) {
+    /* Changed from .form-help to .formHelp */
     font-size: 0.9rem;
 }
 
-.formWrapper p a { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper p a {
+    /* Changed from .form-wrapper to .formWrapper */
     color: #fff;
 }
 
-.formWrapper small { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper small {
+    /* Changed from .form-wrapper to .formWrapper */
     display: block;
     margin-top: 15px;
     color: #b3b3b3;
 }
 
-.formWrapper small a { /* Changed from .form-wrapper to .formWrapper */
+.formWrapper small a {
+    /* Changed from .form-wrapper to .formWrapper */
     color: #0071eb;
 }
 
@@ -152,7 +178,8 @@ form .formHelp :where(label, a) { /* Changed from .form-help to .formHelp */
     }
 
     nav,
-    .formWrapper { /* Changed from .form-wrapper to .formWrapper */
+    .formWrapper {
+        /* Changed from .form-wrapper to .formWrapper */
         padding: 20px;
     }
 
@@ -160,12 +187,14 @@ form .formHelp :where(label, a) { /* Changed from .form-help to .formHelp */
         width: 140px;
     }
 
-    .formWrapper { /* Changed from .form-wrapper to .formWrapper */
+    .formWrapper {
+        /* Changed from .form-wrapper to .formWrapper */
         width: 100%;
         top: 43%;
     }
 
-    .formWrapper form { /* Changed from .form-wrapper to .formWrapper */
+    .formWrapper form {
+        /* Changed from .form-wrapper to .formWrapper */
         margin: 25px 0 40px;
     }
 }

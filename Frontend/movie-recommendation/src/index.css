@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,8 +8,191 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+body::-webkit-scrollbar{
+  display:none;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.page-header {
+  background-color: #b2afab;
+  background-position: center center;
+  background-size: cover;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  max-height: 999px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+}
+
+.page-header .filter::after {
+  background-color: rgba(0, 0, 0, 0.4);
+  content: "";
+  display: block;
+  height: 100%;
+  left: 0;
+  top: 0;
+  position: absolute;
+
+  width: 100%;
+  z-index: 1;
+}
+
+.page-header .content-center {
+  display: flex;
+
+  margin-top: 85px;
+}
+
+.filter {
+  -webkit-transition: all 150ms linear;
+  -moz-transition: all 150ms linear;
+  -o-transition: all 150ms linear;
+  -ms-transition: all 150ms linear;
+  transition: all 150ms linear;
+}
+
+.title-brand {
+  max-width: 950px;
+  margin-left: 40px;
+  position: relative;
+  color: #ffffff;
+  display: flex;
+}
+
+.title-brand .type {
+  position: absolute;
+  font-size: 20px;
+  background: #132026;
+  padding: 6px 10px;
+  border-radius: 4px;
+  top: 0;
+  font-weight: 600;
+  margin-top: 10px;
+  right: -15px;
+}
+
+.favouriteButton {
+  background-color: #89b8ff00;
+  color: #77cbffc4;
+  border-width: 1px;
+  border-color: #77cbffc4;
+  width: 200px;
+  border-style: solid;
+  font-weight: 530;
+  padding: 10px 20px;
+  position: relative;
+  z-index: 10;
+  height: 60px;
+  border-radius: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-size: 18px;
+}
+.favouriteButton:hover{
+  background-color: #58585829;
+  color: rgba(255, 255, 255, 0.701);
+
+}
+.trailerButton {
+  background-color: #77cbffc4;
+  color: rgba(255, 255, 255, 0.701);
+  font-weight: 600;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  width: 200px;
+  position: relative;
+  z-index: 10;
+  height: 60px;
+  box-shadow: 0 5px 20px rgba(87, 184, 237, 0.799);
+  cursor: pointer;
+  font-size: 23px;
+  margin-top: 20px;
+  margin-left: 50px;
+}
+
+.trailerButton:hover {
+  background-color: #ffaa0000;
+  border-style: solid;
+  border-width: 1px;
+  color: #77adffc4;
+  border-color: rgb(74, 157, 235);
+}
+
+.presentation-title {
+  font-size: 7em;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+  letter-spacing: 3px;
+  background: #fbf8ec;
+  background: -moz-linear-gradient(top, #ffffff 35%, #4e6773 100%);
+  background: -webkit-linear-gradient(top, #ffffff 35%, #4e6773 100%);
+  background: -ms-linear-gradient(top, #ffffff 35%, #4e6773 100%);
+  background: linear-gradient(to bottom, #ffffff 35%, #4e6773 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.presentation-page .presentation-title {
+  font-size: 5em;
+}
+
+.presentation-page .presentation-title {
+  font-size: 4em;
+}
+
+.fog-low {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin-left: -35%;
+  margin-bottom: -200px;
+  width: 90%;
+  opacity: 0.25;
+}
+
+.fog-low img {
+  width: 100%;
+}
+
+.fog-low.right {
+  margin-left: 30%;
+  opacity: 0.5;
+}
+
+.presentation-subtitle {
+  font-size: 1.7em;
+  color: #ffffff;
+}
+
+.moving-clouds {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  width: 250.625em;
+  height: 53.75em;
+  -webkit-animation: cloudLoop 80s linear infinite;
+  animation: cloudLoop 80s linear infinite;
+}
+
+@keyframes cloudLoop {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    -webkit-transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-50%, 0, 0);
+  }
 }

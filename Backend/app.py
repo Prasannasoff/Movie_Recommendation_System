@@ -141,7 +141,6 @@ def getSelectedMovie():
     print(movieTitle)
     movie_details=fetch_movie_details(movieId)
     movie_details['title'] = movieTitle 
-    print(movie_details)
     return jsonify(movie_details)
 
 @app.route('/recommend', methods=['POST'])

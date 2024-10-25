@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import style from '../Styles/Login.module.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -11,15 +11,17 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/home'); 
+      localStorage.setItem('user', email); // Store user info in localStorage
+      toast.success("Login successful", { position: "top-center" });
+      navigate('/home');
     } catch (error) {
-      setError(error.message); 
+      setError(error.message);
+      toast.error("Login failed", { position: "top-center" });
     }
   };
 
@@ -56,9 +58,8 @@ function Login() {
             <p>Not registered? <Link to='/register'>Sign up</Link></p>  
           </div>
         </form>
-       
-      
       </div>
+      <ToastContainer />
     </div>
   );
 }

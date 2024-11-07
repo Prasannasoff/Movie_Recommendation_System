@@ -4,8 +4,11 @@ import style from '../Styles/LandingPage.module.css';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
 import ClipLoader from 'react-spinners/ClipLoader';
-
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { db, auth } from '../firebaseConfig';
 function LandingPage() {
+    const [user] = useAuthState(auth); 
     const navigate = useNavigate();
     const [movies, setMovies] = useState([]);
     const [popularMovies, setPopularMovies] = useState([]);
@@ -14,6 +17,7 @@ function LandingPage() {
     const [filteredMovies, setFilteredMovies] = useState([]);
     const [recommendedMovies, setRecommendedMovies] = useState([]);
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         const fetchMovies = async () => {
             try {
@@ -32,28 +36,70 @@ function LandingPage() {
         };
         fetchMovies();
     }, []);
+    
+    useEffect(() => {
+        if (user) {
+          const fetchRecommendations = async () => {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            console.log("User",userDoc);
+            if (userDoc.exists()) {
+              setRecommendedMovies(userDoc.data().recommendations || []);
+            }
+          };
+          fetchRecommendations();
+        }
+      }, [user]);
+      
+      // Function to update recommendations in Firestore
+      const updateRecommendations = async (newRecommendations) => {
+        if (user) {
+          const userRef = doc(db, 'users', user.uid);
+      
+          // Fetch current recommendations from Firestore
+          const userDoc = await getDoc(userRef);
+          let currentRecommendations = userDoc.exists() ? userDoc.data().recommendations || [] : [];
+      
+          // Add new recommendations at the start of the array
+          currentRecommendations = [...newRecommendations, ...currentRecommendations];
+      
+          // Limit to 10 recommendations, remove any older ones if the array exceeds 10
+          if (currentRecommendations.length > 10) {
+            currentRecommendations = currentRecommendations.slice(0, 10);
+          }
+      
+          // Update Firestore with the new recommendations
+          await updateDoc(userRef, {
+            recommendations: currentRecommendations
+          });
+      
+          // Update local state
+          setRecommendedMovies(currentRecommendations);
+        }
+      };
+      
+      
 
     // Load recommended movies from localStorage on component mount
-    useEffect(() => {
-        const storedRecommendations = localStorage.getItem('recommendedMovies');
-        if (storedRecommendations) {
-            setRecommendedMovies(JSON.parse(storedRecommendations));
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedRecommendations = localStorage.getItem('recommendedMovies');
+    //     if (storedRecommendations) {
+    //         setRecommendedMovies(JSON.parse(storedRecommendations));
+    //     }
+    // }, []);
 
-    // Listen for changes in localStorage and update recommendedMovies
-    useEffect(() => {
-        const handleStorageChange = () => {
-            const storedRecommendations = localStorage.getItem('recommendedMovies');
-            if (storedRecommendations) {
-                setRecommendedMovies(JSON.parse(storedRecommendations));
-            }
-        };
-        window.addEventListener('storage', handleStorageChange);
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, []);
+    // // Listen for changes in localStorage and update recommendedMovies
+    // useEffect(() => {
+    //     const handleStorageChange = () => {
+    //         const storedRecommendations = localStorage.getItem('recommendedMovies');
+    //         if (storedRecommendations) {
+    //             setRecommendedMovies(JSON.parse(storedRecommendations));
+    //         }
+    //     };
+    //     window.addEventListener('storage', handleStorageChange);
+    //     return () => {
+    //         window.removeEventListener('storage', handleStorageChange);
+    //     };
+    // }, []);
 
     const handleSearchChange = (e) => {
         const query = e.target.value;
@@ -72,19 +118,20 @@ function LandingPage() {
         try {
             setLoading(true)
             const response = await axios.post('http://localhost:5000/recommend', { movie: selectedMovie });
-    
+            console.log("Recommendations:",response.data);
             // Get stored recommendations from localStorage or initialize as empty array if not present
-            const storedRecommendations = JSON.parse(localStorage.getItem('recommendedMovies')) || [];
+            // const storedRecommendations = JSON.parse(localStorage.getItem('recommendedMovies')) || [];
     
-            // Combine new recommendations with existing ones and remove duplicates using Set
-            const combinedRecommendations = [...new Set([...response.data, ...storedRecommendations])];
+            // // Combine new recommendations with existing ones and remove duplicates using Set
+            // const combinedRecommendations = [...new Set([...response.data, ...storedRecommendations])];
     
-            // Limit to a certain number of recommendations, for example, 10
-            const limitedRecommendations = combinedRecommendations.slice(0, 10);
+            // // Limit to a certain number of recommendations, for example, 10
+            // const limitedRecommendations = combinedRecommendations.slice(0, 10);
 
-            setRecommendedMovies(limitedRecommendations);
-            console.log("Recommendation",limitedRecommendations);
-            localStorage.setItem('recommendedMovies', JSON.stringify(limitedRecommendations));
+            // setRecommendedMovies(limitedRecommendations);
+            // console.log("Recommendation",limitedRecommendations);
+            // localStorage.setItem('recommendedMovies', JSON.stringify(limitedRecommendations));
+            await updateRecommendations(response.data);
             setLoading(false)
     
         } catch (error) {

@@ -1,8 +1,9 @@
 // Register.js
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../firebaseConfig';
+import { auth,db } from '../firebaseConfig';
 import { Link } from 'react-router-dom';
+import { setDoc, doc } from 'firebase/firestore';
 function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,7 +13,14 @@ function Register() {
     e.preventDefault();
     setError('');
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential=await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Add user to Firestore with an empty recommendations array
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        recommendations: []
+      });
       alert("Registered successfully!");
     } catch (error) {
       setError(error.message);
@@ -45,7 +53,7 @@ function Register() {
         <button type="submit">Register</button>
       </form>
       <p>
-        Already have an account? <Link to="/l">Login here</Link>
+        Already have an account? <Link to="/login">Login here</Link>
       </p>
     </div>
   );

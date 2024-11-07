@@ -31,8 +31,8 @@ function Sidebar() {
         <span className={style.iconLabel}>Home</span>
       </div>
       <div 
-        className={`${style.iconContainer} ${isActive('/Favourite') ? style.active : ''}`} 
-        onClick={() => handleNavigation('/Favourite')}
+        className={`${style.iconContainer} ${isActive('/favoritelist') ? style.active : ''}`} 
+        onClick={() => handleNavigation('/favoritelist')}
       >
         <FontAwesomeIcon icon={faHeart} className={style.icon} />
         <span className={style.iconLabel}>Favorites</span>

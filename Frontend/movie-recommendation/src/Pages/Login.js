@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import style from '../Styles/Login.module.css';
 import { toast, ToastContainer } from 'react-toastify';
+import { getDoc, doc } from 'firebase/firestore';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -14,16 +15,40 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+  
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      localStorage.setItem('user', email); // Store user info in localStorage
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      if (user && user.uid) {
+        // Check if db is properly initialized
+        console.log("Firestore instance:", db);
+  
+        // Fetch user document from Firestore
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+  
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          console.log("User Data:", userData);  // Logging user data for verification
+          localStorage.setItem('user', JSON.stringify({ uid: user.uid, email: user.email }));
+          // You can save other details like recommendations if needed
+          // localStorage.setItem('recommendations', JSON.stringify(userData.recommendations));
+        } else {
+          console.error("No document found for user with UID:", user.uid);
+          toast.error("User document not found.", { position: "top-center" });
+        }
+      }
+  
       toast.success("Login successful", { position: "top-center" });
       navigate('/home');
     } catch (error) {
       setError(error.message);
       toast.error("Login failed", { position: "top-center" });
+      console.error("Login error:", error);
     }
   };
+  
 
   return (
     <div className={style.loginCont}>

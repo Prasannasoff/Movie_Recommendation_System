@@ -140,6 +140,7 @@ def getSelectedMovie():
     movieTitle = request.json.get('title')
     print(movieTitle)
     movie_details=fetch_movie_details(movieId)
+    movie_details['id']=movieId
     movie_details['title'] = movieTitle 
     return jsonify(movie_details)
 

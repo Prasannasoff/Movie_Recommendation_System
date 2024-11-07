@@ -1,15 +1,73 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import style from '../Styles/MovieDetail.module.css'
+import style from '../Styles/MovieDetail.module.css';
 import Sidebar from '../Components/Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { faPlus, faAngleRight, faA } from '@fortawesome/free-solid-svg-icons';
+import { db, auth } from '../firebaseConfig'; 
+import { doc, updateDoc, arrayUnion, getDoc, setDoc } from 'firebase/firestore'; 
+import { useNavigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { faPlus, faCheck,faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { toast, ToastContainer } from 'react-toastify';
 function MovieDetail() {
+    const navigate = useNavigate();
     const location = useLocation();
+    const [user] = useAuthState(auth); 
     const { movie } = location.state;
-    console.log("MovieDetial", movie)
+    console.log("MovieDetail", movie);
+    const [isFavorite, setIsFavorite] = useState(false); // Track if the movie is in favorites
+    const [addToFavorites, setAddToFavorites] = useState(false);
 
+    useEffect(() => {
+        // Check if the movie is already in the user's favorites
+        const checkIfFavorite = async () => {
+            try {
+                const userRef = doc(db, 'users', user.uid, 'favorites', movie.title);
+                const userDoc = await getDoc(userRef);
+                if (userDoc.exists()) {
+                    setIsFavorite(true); // Movie is already in favorites
+                }
+            } catch (error) {
+                console.error("Error checking if movie is favorite: ", error);
+            }
+        };
+
+        if (user) {
+            checkIfFavorite(); // Check if the user is logged in and movie is in favorites
+        }
+    }, [user, movie.title]);
+
+    const handleAddToFavorites = async () => {
+        try {
+            // Movie data to add to favorites
+            const movieData = {
+                id: movie.id,
+                title: movie.title,
+                moviePoster: movie.poster_url,
+                rating: movie.rating,
+            };
+
+            // Reference to the current user's favorites collection
+            const userRef = doc(db, 'users', user.uid, 'favorites', movie.title);
+
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+                toast.warn("Already added to Favorite", { position: "top-center" });
+                console.log("Movie already added to favorites");
+                return;
+            }
+
+            // Add the movie to the user's favorites list (create a new document if it doesn't exist)
+            await setDoc(userRef, {
+                movieData: [movieData], // Store the movie in an array as it's the first entry
+            });
+
+            toast.success("Added to Favorites", { position: "top-center" });
+            setIsFavorite(true); // Update state after successful addition
+        } catch (error) {
+            console.error("Error adding movie to favorites: ", error);
+        }
+    };
 
     return (
         <div className={style.detailCont}>
@@ -76,9 +134,9 @@ function MovieDetail() {
                                 </div>
                             )}
                             <div className={style.favouriteButton}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <div>TO WATCHLIST</div>
-                                    <FontAwesomeIcon icon={faPlus} className={style.icon} />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }} onClick={handleAddToFavorites}>
+                                    <div>{isFavorite ? 'ADDED TO FAVORITES' : 'TO WATCHLIST'}</div>
+                                    <FontAwesomeIcon icon={isFavorite ? faCheck : faPlus} className={style.icon} />
                                 </div>
                             </div>
                         </div>
@@ -97,22 +155,18 @@ function MovieDetail() {
                                     rel="noopener noreferrer"
                                 >
                                     <FontAwesomeIcon icon={faAngleRight} color='red' size='1x' />
-
                                 </a>
                             </div>
                         </div>
                         <hr />
-
                         <div className={style.castDetail}>
                             <div style={{ color: 'rgb(50,71,121)', fontSize: '25px', fontWeight: 600 }}>Writers</div>
-
                             {movie.writers.map(data => <a
                                 href={`https://www.google.com/search?q=${encodeURIComponent(data)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ textDecoration: 'none' }}
                             ><div style={{ color: 'grey', fontSize: '20px' }} className={style.castName}>{data} </div></a>)}
-
                         </div>
                         <hr />
                         <div className={style.castDetail}>
@@ -122,11 +176,8 @@ function MovieDetail() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ textDecoration: 'none' }}
-
-
                             >
                                 <div style={{ color: 'grey', fontSize: '20px' }} className={style.castName}>{movie.hero}</div>
-
                             </a>
                             <a
                                 href={`https://www.google.com/search?q=${encodeURIComponent(movie.heroine)}`}
@@ -135,16 +186,15 @@ function MovieDetail() {
                                 style={{ textDecoration: 'none' }}
                             >
                                 <div style={{ color: 'grey', fontSize: '20px' }} className={style.castName}>{movie.heroine}</div>
-
                             </a>
                         </div>
                         <hr />
-
                     </div>
                 </div>
             </div>
-        </div >
-    )
+            <ToastContainer /> 
+        </div>
+    );
 }
 
 export default MovieDetail;

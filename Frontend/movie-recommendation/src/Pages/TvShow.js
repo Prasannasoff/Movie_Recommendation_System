@@ -3,6 +3,8 @@ import axios from 'axios';
 import style from '../Styles/TvShow.module.css';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
+import ClipLoader from 'react-spinners/ClipLoader';
+
 function TvShow() {
     const navigate = useNavigate();
     const [movies, setMovies] = useState([]);
@@ -11,10 +13,11 @@ function TvShow() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredMovies, setFilteredMovies] = useState([]);
     const [recommendedMovies, setRecommendedMovies] = useState([]);
-
+    const [loading,setLoading]=useState(false);
     useEffect(() => {
         const fetchMovies = async () => {
             try {
+                setLoading(true)
                 const response = await axios.get('http://localhost:5000/getAllShows');
                 setMovies(response.data);
                 console.log("Tv SHhow", response.data);
@@ -23,6 +26,7 @@ function TvShow() {
                 console.log("Popular Show", popularResponse.data)
                 const newReleasesResponse = await axios.get('http://localhost:5000/getNewShows');
                 setNewReleases(newReleasesResponse.data);
+                setLoading(false)
             } catch (error) {
                 console.error('Error fetching movies:', error);
             }
@@ -64,13 +68,20 @@ function TvShow() {
     };
 
     const handleSelectedMovie = async (seriesDetail) => {
+        setLoading(true)
         navigate('/seriesdetail', { state: { seriesDetail } });
+        setLoading(false);
 
     };
 
     return (
         <div className={style.MainlandingCont}>
             <Sidebar />
+            {loading && (
+                <div className={style.loaderContainer}>
+                    <ClipLoader color="#2AA7FF" size={50} />
+                </div>
+            )}
             <div className={style.header}>
                 {/* Search bar */}
                 <div className={style.searchCont}>

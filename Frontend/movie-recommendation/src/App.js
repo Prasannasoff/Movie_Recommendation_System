@@ -8,6 +8,7 @@ import './App.css';
 import MovieDetail from './Pages/MovieDetail';
 import TvShow from './Pages/TvShow';
 import SeriesDetail from './Pages/SeriesDetail';
+import FavouritePage from './Pages/FavouritePage';
 import HomePage from './Pages/HomePage'
 function App() {
 
@@ -21,6 +22,8 @@ function App() {
         <Route path="/moviedetail" element={<MovieDetail />} />
         <Route path="/tvshow" element={<TvShow />} />
         <Route path="/seriesdetail" element={<SeriesDetail />} />
+        <Route path="/favoritelist" element={<FavouritePage />} />
+
 
 
       </Routes>

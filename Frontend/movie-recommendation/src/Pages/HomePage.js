@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function IndexHeader() {
     const navigate = useNavigate();
     const [loggedIn, setLoggedIn] = useState(false);
-
+    
     useEffect(() => {
         const user = localStorage.getItem('user');
         if (user) setLoggedIn(true);

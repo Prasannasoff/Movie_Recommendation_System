@@ -3,16 +3,18 @@ import { useLocation } from 'react-router-dom';
 import style from '../Styles/MovieDetail.module.css';
 import Sidebar from '../Components/Sidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { db, auth } from '../firebaseConfig'; 
-import { doc, updateDoc, arrayUnion, getDoc, setDoc } from 'firebase/firestore'; 
+import { db, auth } from '../firebaseConfig';
+import { doc, updateDoc, arrayUnion, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { faPlus, faCheck,faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faCheck, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { toast, ToastContainer } from 'react-toastify';
 function MovieDetail() {
     const navigate = useNavigate();
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
+
     const location = useLocation();
-    const [user] = useAuthState(auth); 
+    const [user] = useAuthState(auth);
     const { movie } = location.state;
     console.log("MovieDetail", movie);
     const [isFavorite, setIsFavorite] = useState(false); // Track if the movie is in favorites
@@ -68,10 +70,17 @@ function MovieDetail() {
             console.error("Error adding movie to favorites: ", error);
         }
     };
-
+    const toggleSidebar = () => {
+        setSidebarOpen(prevState => !prevState);
+    };
     return (
         <div className={style.detailCont}>
-            <Sidebar />
+            <button className={style.toggleButton} onClick={toggleSidebar}>
+                ☰ {/* You can use a hamburger icon here */}
+            </button>
+
+            {/* Sidebar Component */}
+            <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
             <div className={style.innerCont}>
                 <div className={style.mainCont}>
                     <img src={movie.poster_url} alt={movie.title} width="300" className={style.moviePoster} />
@@ -192,7 +201,7 @@ function MovieDetail() {
                     </div>
                 </div>
             </div>
-            <ToastContainer /> 
+            <ToastContainer />
         </div>
     );
 }

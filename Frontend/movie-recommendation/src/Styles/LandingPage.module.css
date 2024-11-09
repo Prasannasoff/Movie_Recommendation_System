@@ -1,7 +1,7 @@
-.mainLandingCont{
+.mainLandingCont {
   display: flex;
+  flex-direction: column; /* Adjusting for smaller screens */
 }
-
 
 .loaderContainer {
   position: fixed;
@@ -9,12 +9,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  min-height: 100vh; 
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
 }
+
 .landingCont {
   margin-left: 80px; /* Same width as the sidebar to avoid overlap */
   flex-grow: 1;
@@ -22,22 +23,23 @@
   background-color: rgb(0, 0, 0);
   color: white;
   height: 100%;
+  overflow: auto; /* Ensure it scrolls correctly on smaller screens */
 }
+
 .header {
   display: flex;
   flex-direction: column;
   margin-left: 80px; /* Same width as the sidebar to avoid overlap */
   height: 380px;
-  background-color: rgb(2, 2, 2); /* Background color for the rest of the header */
-  width: calc(100% - 80px); /* Ensure it fits within the window minus the sidebar */
+  background-color: rgb(2, 2, 2);
+  width: calc(100% - 80px);
   background-image: url("../avatar.jpg");
-  background-position: right; /* Align the image to the right */
+  background-position: right;
   background-repeat: no-repeat;
-  background-size: contain; /* Ensure the image fits within the header without overflowing */
-  box-sizing: border-box; /* Prevent overflow by including padding/margins in the width calculation */
-  overflow: hidden; 
+  background-size: contain;
+  box-sizing: border-box;
+  overflow: hidden;
 }
-
 
 .searchCont {
   display: flex;
@@ -45,14 +47,13 @@
   width: 100%;
   margin-top: 20px;
   margin-bottom: 20px;
-  position: relative; /* Set relative positioning */
+  position: relative;
 }
-
 
 .searchBox {
   width: 350px;
   height: 40px;
-  background-color: rgba(33, 38, 43); 
+  background-color: rgba(33, 38, 43);
   color: grey;
   border: none;
   max-width: 600px;
@@ -60,20 +61,20 @@
   border-radius: 30px;
   font-size: 18px;
   outline: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for a glossy effect */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.title{
-
+.title {
   display: flex;
   flex-direction: column;
-  width:500px;
-  height:100%;
+  width: 500px;
+  height: 100%;
   justify-content: end;
-  gap:10px;
+  gap: 10px;
   padding: 10px;
-  padding-left: 40px; 
+  padding-left: 40px;
 }
+
 .sectionTitle {
   font-size: 24px;
   margin-bottom: 10px;
@@ -84,9 +85,11 @@
   overflow-x: auto;
   gap: 10px;
 }
+
 .movieRow::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+  display: none;
 }
+
 .movieCard {
   flex: 0 0 auto;
   width: 200px;
@@ -96,13 +99,15 @@
   padding: 10px;
   text-align: center;
 }
-.movieCard:hover{
-  border:1px;
-  width:300px;
-  height:450px;
+
+.movieCard:hover {
+  border: 1px;
+  width: 300px;
+  height: 450px;
   border-style: solid;
   color: white;
 }
+
 .moviePoster {
   width: 100%;
   height: auto;
@@ -116,17 +121,16 @@
 }
 
 .suggestions {
-  background-color: rgba(33, 38, 43, 0.9); /* Same as search box color */
-  position: absolute; /* Absolute positioning */
+  background-color: rgba(33, 38, 43, 0.9);
+  position: absolute;
   color: white;
-  width: 350px; /* Match the width of the search box */
+  width: 350px;
   max-height: 200px;
   overflow-y: auto;
   border: 1px solid #ccc;
   z-index: 1001;
-  margin-top: 60px; /* Add some space between search box and suggestions */
+  margin-top: 60px;
 }
-
 
 .suggestionItem {
   padding: 10px;
@@ -136,4 +140,97 @@
 
 .suggestionItem:hover {
   background-color: #f0f0f0;
+}
+
+.toggleButton {
+  display: none; /* Hide by default */
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 30px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1002;
+}
+
+@media (max-width: 768px) {
+  .toggleButton {
+      display: block; /* Show on mobile */
+  }
+}
+
+/* Media Queries for mobile responsiveness */
+@media (max-width: 768px) {
+  .mainLandingCont {
+    flex-direction: column;
+  }
+
+  .landingCont {
+    margin-left: 0;
+  }
+
+
+  .header {
+    margin-left:0;
+    width:100%;
+    height: 250px; /* Adjust header height for mobile */
+    background-size: cover; /* Adjust background to fit mobile screens */
+  }
+
+  .searchBox {
+    width: 60%;
+    max-width: 100%;
+    font-size: 16px; /* Adjust font size for mobile */
+    padding: 8px 12px;
+  }
+
+  .title {
+    width: 100%;
+    padding-left: 20px;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
+  }
+
+  .movieRow {
+    gap: 5px;
+  }
+
+  .movieCard {
+    width: 140px;
+    font-size: 14px;
+  }
+
+  .movieCard:hover {
+    width: 140px; /* Adjust hover size for mobile */
+    height:auto;
+    border: none;
+  }
+
+  /* Hide movie phrase text for mobile */
+  .title div:nth-child(2) {
+    display: none;
+  }
+
+  /* Adjust suggestions for mobile */
+  .suggestions {
+    width: 200px;
+    max-height: 150px;
+    margin-top: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchBox {
+    font-size: 15px; /* Smaller text for very small screens */
+    padding: 8px;
+  }
+
+  .movieCard {
+    width: 140px; /* Smaller cards on very small screens */
+  }
 }

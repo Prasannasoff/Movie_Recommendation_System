@@ -1,4 +1,2 @@
 .env
-movielist.pkl
-similarity.pkl
 lit.py

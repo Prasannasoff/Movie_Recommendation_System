@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../Styles/FavoritePage.module.css'; // Import the CSS module
 import Sidebar from '../Components/Sidebar';
 function FavouritePage() {
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
+
     const navigate = useNavigate();
     const [favorites, setFavorites] = useState([]);
     const [user] = useAuthState(auth); // Get the current user
@@ -37,10 +39,17 @@ function FavouritePage() {
         const movie = response.data;
         navigate('/moviedetail', { state: { movie } });
     };
-
+    const toggleSidebar = () => {
+        setSidebarOpen(prevState => !prevState);
+    };
     return (
         <div className={styles.favoritesPage}>
-            <Sidebar/>
+            <button className={styles.toggleButton} onClick={toggleSidebar}>
+                ☰ {/* You can use a hamburger icon here */}
+            </button>
+
+            {/* Sidebar Component */}
+            <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
             <div className={styles.favoritesContainer}>
                 <h2 className={styles.title}>Favorites</h2>
                 {favorites.length > 0 ? (

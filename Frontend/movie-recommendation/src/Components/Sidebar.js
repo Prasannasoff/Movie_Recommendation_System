@@ -4,25 +4,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faHeart, faFilm, faTv, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-function Sidebar() {
+function Sidebar({ isOpen, onToggle }) {
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleNavigation = (path) => {
     navigate(path);
+    if (onToggle) onToggle(); // Close sidebar on navigation
   };
 
-  // Logout function to clear localStorage and redirect to login page
   const handleLogout = () => {
-    localStorage.removeItem('user'); // Clear user data from localStorage
-    navigate('/login'); // Redirect to login page
+    localStorage.removeItem('user');
+    navigate('/login');
   };
 
-  // Function to check if the current path matches the given path
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className={style.navCont}>
+    <div className={`${style.navCont} ${isOpen ? style.open : ''}`}>
       <div 
         className={`${style.iconContainer} ${isActive('/home') ? style.active : ''}`} 
         onClick={() => handleNavigation('/home')}
@@ -53,7 +52,7 @@ function Sidebar() {
       </div>
       <div 
         className={style.iconContainer} 
-        onClick={handleLogout} // Call logout function on click
+        onClick={handleLogout}
       >
         <FontAwesomeIcon icon={faSignOutAlt} className={style.icon} />
         <span className={style.iconLabel}>Logout</span>

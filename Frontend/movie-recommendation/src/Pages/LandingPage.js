@@ -8,8 +8,9 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
 function LandingPage() {
-    const [user] = useAuthState(auth); 
+    const [user] = useAuthState(auth);
     const navigate = useNavigate();
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [movies, setMovies] = useState([]);
     const [popularMovies, setPopularMovies] = useState([]);
     const [newReleases, setNewReleases] = useState([]);
@@ -36,48 +37,48 @@ function LandingPage() {
         };
         fetchMovies();
     }, []);
-    
+
     useEffect(() => {
         if (user) {
-          const fetchRecommendations = async () => {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            console.log("User",userDoc);
-            if (userDoc.exists()) {
-              setRecommendedMovies(userDoc.data().recommendations || []);
-            }
-          };
-          fetchRecommendations();
+            const fetchRecommendations = async () => {
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                console.log("User", userDoc);
+                if (userDoc.exists()) {
+                    setRecommendedMovies(userDoc.data().recommendations || []);
+                }
+            };
+            fetchRecommendations();
         }
-      }, [user]);
-      
-      // Function to update recommendations in Firestore
-      const updateRecommendations = async (newRecommendations) => {
+    }, [user]);
+
+    // Function to update recommendations in Firestore
+    const updateRecommendations = async (newRecommendations) => {
         if (user) {
-          const userRef = doc(db, 'users', user.uid);
-      
-          // Fetch current recommendations from Firestore
-          const userDoc = await getDoc(userRef);
-          let currentRecommendations = userDoc.exists() ? userDoc.data().recommendations || [] : [];
-      
-          // Add new recommendations at the start of the array
-          currentRecommendations = [...newRecommendations, ...currentRecommendations];
-      
-          // Limit to 10 recommendations, remove any older ones if the array exceeds 10
-          if (currentRecommendations.length > 10) {
-            currentRecommendations = currentRecommendations.slice(0, 10);
-          }
-      
-          // Update Firestore with the new recommendations
-          await updateDoc(userRef, {
-            recommendations: currentRecommendations
-          });
-      
-          // Update local state
-          setRecommendedMovies(currentRecommendations);
+            const userRef = doc(db, 'users', user.uid);
+
+            // Fetch current recommendations from Firestore
+            const userDoc = await getDoc(userRef);
+            let currentRecommendations = userDoc.exists() ? userDoc.data().recommendations || [] : [];
+
+            // Add new recommendations at the start of the array
+            currentRecommendations = [...newRecommendations, ...currentRecommendations];
+
+            // Limit to 10 recommendations, remove any older ones if the array exceeds 10
+            if (currentRecommendations.length > 10) {
+                currentRecommendations = currentRecommendations.slice(0, 10);
+            }
+
+            // Update Firestore with the new recommendations
+            await updateDoc(userRef, {
+                recommendations: currentRecommendations
+            });
+
+            // Update local state
+            setRecommendedMovies(currentRecommendations);
         }
-      };
-      
-      
+    };
+
+
 
     // Load recommended movies from localStorage on component mount
     // useEffect(() => {
@@ -118,13 +119,13 @@ function LandingPage() {
         try {
             setLoading(true)
             const response = await axios.post('http://localhost:5000/recommend', { movie: selectedMovie });
-            console.log("Recommendations:",response.data);
+            console.log("Recommendations:", response.data);
             // Get stored recommendations from localStorage or initialize as empty array if not present
             // const storedRecommendations = JSON.parse(localStorage.getItem('recommendedMovies')) || [];
-    
+
             // // Combine new recommendations with existing ones and remove duplicates using Set
             // const combinedRecommendations = [...new Set([...response.data, ...storedRecommendations])];
-    
+
             // // Limit to a certain number of recommendations, for example, 10
             // const limitedRecommendations = combinedRecommendations.slice(0, 10);
 
@@ -133,12 +134,12 @@ function LandingPage() {
             // localStorage.setItem('recommendedMovies', JSON.stringify(limitedRecommendations));
             await updateRecommendations(response.data);
             setLoading(false)
-    
+
         } catch (error) {
             console.error('Error fetching recommendations:', error);
         }
     };
-    
+
 
     const handleSelectedMovie = async (movieDetail) => {
         setLoading(true);
@@ -154,14 +155,25 @@ function LandingPage() {
         const response = await axios.post('http://localhost:5000/getSelectedMovie', { id: movieDetail.id, title: movieDetail.title });
         console.log("Selected Movie", response.data);
         const movie = response.data;
-        getRecommendations(movie.title); 
+        getRecommendations(movie.title);
         navigate('/moviedetail', { state: { movie } });
         setLoading(false);
 
     };
+
+    const toggleSidebar = () => {
+        setSidebarOpen(prevState => !prevState);
+    };
     return (
         <div className={style.MainlandingCont}>
-            <Sidebar />
+        
+            <button className={style.toggleButton} onClick={toggleSidebar}>
+                ☰ {/* You can use a hamburger icon here */}
+            </button>
+
+            {/* Sidebar Component */}
+            <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
+
             {loading && (
                 <div className={style.loaderContainer}>
                     <ClipLoader color="#2AA7FF" size={50} />

@@ -1,46 +1,66 @@
+/* Sidebar styles */
 .navCont {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 80px;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgb(5, 5, 6);
-    padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 80px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0; /* Always visible on larger screens */
+  background-color: rgb(5, 5, 6);
+  padding-top: 20px;
+  transition: left 0.3s ease-in-out;
+}
+
+.navCont.open {
+  left: 0; /* Sidebar is visible on mobile if open */
 }
 
 .iconContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  cursor: pointer;
 }
 
 .iconContainer.active .icon,
 .iconContainer.active .iconLabel {
-    color: #77cbffe8;
+  color: #77cbffe8;
 }
-.iconContainer.active .icon{
-    box-shadow: 0px 15px 30px rgba(87, 184, 237, 0.651);
+
+.iconContainer.active .icon {
+  box-shadow: 0px 15px 30px rgba(87, 184, 237, 0.651);
 }
 
 .icon {
-    font-size: 24px;
-    color: white;
-    margin-bottom: 5px;
+  font-size: 24px;
+  color: white;
+  margin-bottom: 5px;
 }
 
 .iconLabel {
-    font-size: 14px;
-    color: white;
+  font-size: 14px;
+  color: white;
 }
 
 .iconContainer:hover .icon,
 .iconContainer:hover .iconLabel {
-    color: #1dbf73;
-    /* Change color on hover */
+  color: #1dbf73;
+}
+
+@media (max-width: 768px) {
+  .navCont {
+    width: 100px; /* Wider sidebar for mobile */
+    left: -250px; /* Initially hidden */
+    padding-top: 150px;
+    z-index: 1001;
+   
+  }
+
+  .navCont.open {
+    left: 0; /* Sidebar becomes visible on mobile */
+  }
 }

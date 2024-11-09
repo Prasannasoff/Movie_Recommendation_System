@@ -189,7 +189,7 @@ form .formHelp :where(label, a) {
 
     .formWrapper {
         /* Changed from .form-wrapper to .formWrapper */
-        width: 100%;
+        width: 80%;
         top: 43%;
     }
 

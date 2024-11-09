@@ -11,7 +11,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app)
 API_KEY = os.getenv('TMDB_API_KEY')
 dfs = pk.load(open("movielist.pkl", "rb"))
 similarity = pk.load(open("similarity.pkl", "rb"))

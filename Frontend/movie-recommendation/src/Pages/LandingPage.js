@@ -51,29 +51,27 @@ function LandingPage() {
         }
     }, [user]);
 
-    // Function to update recommendations in Firestore
     const updateRecommendations = async (newRecommendations) => {
         if (user) {
             const userRef = doc(db, 'users', user.uid);
 
-            // Fetch current recommendations from Firestore
             const userDoc = await getDoc(userRef);
             let currentRecommendations = userDoc.exists() ? userDoc.data().recommendations || [] : [];
 
-            // Add new recommendations at the start of the array
+  
             currentRecommendations = [...newRecommendations, ...currentRecommendations];
 
-            // Limit to 10 recommendations, remove any older ones if the array exceeds 10
+           
             if (currentRecommendations.length > 10) {
                 currentRecommendations = currentRecommendations.slice(0, 10);
             }
 
-            // Update Firestore with the new recommendations
+         
             await updateDoc(userRef, {
                 recommendations: currentRecommendations
             });
 
-            // Update local state
+           
             setRecommendedMovies(currentRecommendations);
         }
     };

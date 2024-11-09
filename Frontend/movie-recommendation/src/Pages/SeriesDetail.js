@@ -7,7 +7,7 @@ function SeriesDetail() {
     const location = useLocation();
     const { seriesDetail } = location.state;
 
-    const posterUrl = `https://image.tmdb.org/t/p/w500${seriesDetail.poster_path}`; // Construct the full URL for the poster image
+    const posterUrl = `https://image.tmdb.org/t/p/w500${seriesDetail.poster_path}`;
 
     return (
         <div className={style.detailCont}>

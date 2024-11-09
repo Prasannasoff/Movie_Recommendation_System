@@ -36,13 +36,13 @@ function Sidebar({ isOpen, onToggle }) {
         <FontAwesomeIcon icon={faHeart} className={style.icon} />
         <span className={style.iconLabel}>Favorites</span>
       </div>
-      <div 
+      {/* <div 
         className={`${style.iconContainer} ${isActive('/movies') ? style.active : ''}`} 
         onClick={() => handleNavigation('/movies')}
       >
         <FontAwesomeIcon icon={faFilm} className={style.icon} />
         <span className={style.iconLabel}>Movies</span>
-      </div>
+      </div> */}
       <div 
         className={`${style.iconContainer} ${isActive('/tvshow') ? style.active : ''}`} 
         onClick={() => handleNavigation('/tvshow')}

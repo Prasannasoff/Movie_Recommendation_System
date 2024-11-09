@@ -17,17 +17,17 @@ function MovieDetail() {
     const [user] = useAuthState(auth);
     const { movie } = location.state;
     console.log("MovieDetail", movie);
-    const [isFavorite, setIsFavorite] = useState(false); // Track if the movie is in favorites
+    const [isFavorite, setIsFavorite] = useState(false); 
     const [addToFavorites, setAddToFavorites] = useState(false);
 
     useEffect(() => {
-        // Check if the movie is already in the user's favorites
+       
         const checkIfFavorite = async () => {
             try {
                 const userRef = doc(db, 'users', user.uid, 'favorites', movie.title);
                 const userDoc = await getDoc(userRef);
                 if (userDoc.exists()) {
-                    setIsFavorite(true); // Movie is already in favorites
+                    setIsFavorite(true); 
                 }
             } catch (error) {
                 console.error("Error checking if movie is favorite: ", error);
@@ -35,13 +35,13 @@ function MovieDetail() {
         };
 
         if (user) {
-            checkIfFavorite(); // Check if the user is logged in and movie is in favorites
+            checkIfFavorite(); 
         }
     }, [user, movie.title]);
 
     const handleAddToFavorites = async () => {
         try {
-            // Movie data to add to favorites
+
             const movieData = {
                 id: movie.id,
                 title: movie.title,
@@ -49,7 +49,6 @@ function MovieDetail() {
                 rating: movie.rating,
             };
 
-            // Reference to the current user's favorites collection
             const userRef = doc(db, 'users', user.uid, 'favorites', movie.title);
 
             const userDoc = await getDoc(userRef);
@@ -59,13 +58,13 @@ function MovieDetail() {
                 return;
             }
 
-            // Add the movie to the user's favorites list (create a new document if it doesn't exist)
+            
             await setDoc(userRef, {
-                movieData: [movieData], // Store the movie in an array as it's the first entry
+                movieData: [movieData],
             });
 
             toast.success("Added to Favorites", { position: "top-center" });
-            setIsFavorite(true); // Update state after successful addition
+            setIsFavorite(true); 
         } catch (error) {
             console.error("Error adding movie to favorites: ", error);
         }
@@ -76,10 +75,9 @@ function MovieDetail() {
     return (
         <div className={style.detailCont}>
             <button className={style.toggleButton} onClick={toggleSidebar}>
-                ☰ {/* You can use a hamburger icon here */}
+                ☰ 
             </button>
 
-            {/* Sidebar Component */}
             <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
             <div className={style.innerCont}>
                 <div className={style.mainCont}>
@@ -87,7 +85,7 @@ function MovieDetail() {
                     <div className={style.movieDetailCont}>
                         <div className={style.title}>{movie.title}</div>
 
-                        {/* Check if genres is defined */}
+                    
                         <div className={style.genresCont}>
                             {movie.genres && movie.genres.map(data =>
                                 <div className={style.genres} key={data}>{data}</div>
@@ -115,7 +113,7 @@ function MovieDetail() {
                             </div>
                         </div>
 
-                        {/* Check if spoken_languages is defined */}
+                      
                         <div className={style.languageCont}>
                             <div className={style.languageImgCont}>
                                 <img src='translate.png' className={style.languagePng} alt='Languages' />

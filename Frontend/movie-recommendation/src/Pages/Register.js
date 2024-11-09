@@ -16,7 +16,7 @@ function Register() {
       const userCredential=await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Add user to Firestore with an empty recommendations array
+  
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         recommendations: []

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/Sidebar';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, getDoc, setDoc } from 'firebase/firestore';
 import { db, auth } from '../firebaseConfig';
 function LandingPage() {
     const [user] = useAuthState(auth);
@@ -41,10 +41,16 @@ function LandingPage() {
     useEffect(() => {
         if (user) {
             const fetchRecommendations = async () => {
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
-                console.log("User", userDoc);
+                const userRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userRef);
+
                 if (userDoc.exists()) {
+                    // If the document exists, use its data
                     setRecommendedMovies(userDoc.data().recommendations || []);
+                } else {
+                    // If the document does not exist, create it
+                    await setDoc(userRef, { recommendations: [] });
+                    setRecommendedMovies([]);
                 }
             };
             fetchRecommendations();
@@ -58,20 +64,20 @@ function LandingPage() {
             const userDoc = await getDoc(userRef);
             let currentRecommendations = userDoc.exists() ? userDoc.data().recommendations || [] : [];
 
-  
+
             currentRecommendations = [...newRecommendations, ...currentRecommendations];
 
-           
+
             if (currentRecommendations.length > 10) {
                 currentRecommendations = currentRecommendations.slice(0, 10);
             }
 
-         
+
             await updateDoc(userRef, {
                 recommendations: currentRecommendations
             });
 
-           
+
             setRecommendedMovies(currentRecommendations);
         }
     };
@@ -164,7 +170,7 @@ function LandingPage() {
     };
     return (
         <div className={style.MainlandingCont}>
-        
+
             <button className={style.toggleButton} onClick={toggleSidebar}>
                 ☰ {/* You can use a hamburger icon here */}
             </button>

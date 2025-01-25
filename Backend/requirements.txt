@@ -1,6 +1,7 @@
 Flask
 Flask-CORS
 requests
+gunicorn
 pandas
 python-dotenv
-gunicorn
+

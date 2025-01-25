@@ -4,4 +4,4 @@ requests
 gunicorn
 pandas
 python-dotenv
-
+gdown

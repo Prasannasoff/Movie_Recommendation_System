@@ -23,9 +23,9 @@ function LandingPage() {
         const fetchMovies = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('http://localhost:5000/movies');
+                const response = await axios.get('https://movie-recommendation-system-vx2a.onrender.com/movies');
                 setMovies(response.data);
-                const popularResponse = await axios.get('http://localhost:5000/movies/popular',{
+                const popularResponse = await axios.get('https://movie-recommendation-system-vx2a.onrender.com/movies/popular',{
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -33,7 +33,7 @@ function LandingPage() {
                 });
                 setPopularMovies(popularResponse.data);
                 console.log("Popularmovies", popularResponse.data);
-                const newReleasesResponse = await axios.get("http://localhost:5000/movies/new-releases", {
+                const newReleasesResponse = await axios.get("https://movie-recommendation-system-vx2a.onrender.com/movies/new-releases", {
                     headers: {
                         "Content-Type": "application/json",
                     },

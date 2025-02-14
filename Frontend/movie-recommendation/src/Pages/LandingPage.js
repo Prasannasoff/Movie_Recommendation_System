@@ -25,10 +25,20 @@ function LandingPage() {
                 setLoading(true);
                 const response = await axios.get('http://localhost:5000/movies');
                 setMovies(response.data);
-                const popularResponse = await axios.get('http://localhost:5000/movies/popular');
+                const popularResponse = await axios.get('http://localhost:5000/movies/popular',{
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: false,  // Ensure credentials are not required
+                });
                 setPopularMovies(popularResponse.data);
                 console.log("Popularmovies", popularResponse.data);
-                const newReleasesResponse = await axios.get('http://localhost:5000/movies/new-releases');
+                const newReleasesResponse = await axios.get("http://localhost:5000/movies/new-releases", {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: false,  // Ensure credentials are not required
+                });
                 setNewReleases(newReleasesResponse.data);
                 setLoading(false);
             } catch (error) {
@@ -147,7 +157,12 @@ function LandingPage() {
 
     const handleSelectedMovie = async (movieDetail) => {
         setLoading(true);
-        const response = await axios.post('http://localhost:5000/getSelectedMovie', { id: movieDetail.id, title: movieDetail.title });
+        const response = await axios.post('http://localhost:5000/getSelectedMovie', { id: movieDetail.id, title: movieDetail.title,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            withCredentials: false,  // Ensure credentials are not required
+         });
         console.log("Selected Movie", response.data);
         const movie = response.data;
         navigate('/moviedetail', { state: { movie } });
